@@ -1,0 +1,106 @@
+@import "tailwindcss";
+@import "../../vendor/livewire/flux/dist/flux.css";
+@custom-variant dark (&:where(.dark, .dark *));
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+
+@font-face {
+    font-family: 'Kantumruy Pro';
+    src: url('../fonts/KANTUMRUYPRO-VARIABLEFONT_WGHT.TTF') format('truetype');
+    font-weight: 100 900; /* Supports the full range of weights */
+    font-style: normal;
+}
+
+/* Optional: Register the Italic variable version if you'll use it */
+/* @font-face {
+    font-family: 'Kantumruy Pro';
+    src: url('../fonts/KANTUMRUYPRO-ITALIC-VARIABLEFONT_WGHT.TTF') format('truetype');
+    font-weight: 100 900;
+    font-style: italic;
+} */
+body{
+    font-family: "Kantumruy Pro", sans-serif;
+}
+
+@theme {
+    --font-sans:
+        "Instrument Sans", ui-sans-serif, system-ui, sans-serif,
+        "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
+        "Noto Color Emoji";
+    --color-zinc-50: var(--color-slate-50);
+    --color-zinc-100: var(--color-slate-100);
+    --color-zinc-200: var(--color-slate-200);
+    --color-zinc-300: var(--color-slate-300);
+    --color-zinc-400: var(--color-slate-400);
+    --color-zinc-500: var(--color-slate-500);
+    --color-zinc-600: var(--color-slate-600);
+    --color-zinc-700: var(--color-slate-700);
+    --color-zinc-800: var(--color-slate-800);
+    --color-zinc-900: var(--color-slate-900);
+    --color-zinc-950: var(--color-slate-950);
+    --color-nos-50: #e6eaf2;
+    --color-nos-100: #ccd5e5;
+    --color-nos-200: #99aacb;
+    --color-nos-300: #6680b1;
+    --color-nos-400: #335597;
+    --color-nos-500: #0c224d;
+    --color-nos-600: #0a1d44;
+    --color-nos-700: #08183b;
+    --color-nos-800: #061232;
+    --color-nos-900: #040d29;
+    --color-nos-950: #020714;
+}
+@theme {
+    --color-accent: var(--color-green-600);
+    --color-accent-content: var(--color-green-600);
+    --color-accent-foreground: var(--color-white);
+    --color-danger: var(--color-red-500);
+    --color-danger-content: var(--color-red-500);
+}
+
+@layer theme {
+    .dark {
+        --color-accent: var(--color-green-600);
+        --color-accent-content: var(--color-green-400);
+        --color-accent-foreground: var(--color-white);
+        --color-danger: var(--color-red-500);
+        --color-danger-content: var(--color-red-400);
+    }
+}
+
+[data-flux-control]:focus {
+}
+
+.table {
+    @apply w-full;
+}
+.table th {
+    @apply px-6 py-4 text-xs font-bold text-zinc-800 dark:text-zinc-200 uppercase tracking-wider;
+}
+.table td {
+    @apply px-6 py-4 whitespace-nowrap text-sm text-zinc-700 dark:text-zinc-100;
+}
+.table thead {
+    @apply bg-zinc-200 dark:bg-zinc-900;
+}
+.table tbody {
+    @apply bg-white dark:bg-zinc-800;
+}
+.table tbody tr {
+    @apply hover:bg-zinc-200/30 dark:hover:bg-zinc-600/30;
+}
+.table tbody tr:last-child {
+    @apply border-b border-zinc-300;
+}
+
+.table thead tr th:first-child {
+    @apply rounded-tl-lg;
+}
+.table thead tr th:last-child {
+    @apply rounded-tr-lg;
+}
+.logo {
+    @apply w-40 h-40 rounded-4xl border border-zinc-300 object-cover;
+}
