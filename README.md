@@ -62,20 +62,40 @@ The Laravel framework is open-sourced software licensed under the [MIT license](
 
 The requirement of Document Tracking System:
 - PHP Version 8.2+
-- Composer 2.9.5
-- Laravel Version 12
-- Node version v22.19+
 - MySQL 9.0
+- Composer 2.9.5
+- Node version v22.x
+- Laravel version 12.x
+- Livewire version 4.x
+- Tailwindcss version 4.x
+- FluxUI version 2.x
 
 ## System Installation
-- please clone this repository
-- run command with composer install
-- run command with npm install
-- run command with npm run build
-- run command with php artisan migrate
-- run command with php artisan db:seed
-- run command with php artisan serve
-
+### please clone this repository
+- Install composer dependency
+```bash
+$ composer install
+```
+- Install node dependency
+```bash
+$ npm install
+```
+- Build node
+```bash
+$ npm run build
+```
+- Migrate database to MySQL
+```bash
+$ php artisan migrate
+```
+- Seed data to database
+```bash
+$ php artisan db:seed
+```
+- Run and test application
+```bash
+$ php artisan serve
+```
 ## Default Username and Password
 - Username : vitoudao
 - Password : Pa$$w0rd$123$
