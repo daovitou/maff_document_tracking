@@ -70,9 +70,9 @@ new #[Layout('layouts::admin.app'), Title('Depatments | Department List')] class
             <tr>
                 <th>{{ __('Nº') }}</th>
 
-                <th class="text-left" wire:click="doSort('gd')">
+                <th class="text-left" wire:click="doSort('gd_name')">
                     <span class="flex items-center justify-between">
-                        <x-datatable-header displayName="{{ __('General Department') }}" field="gd"
+                        <x-datatable-header displayName="{{ __('General Department') }}" field="gd_name"
                             :sortField="$sortField" :sortDirection="$sortDirection" />
                     </span>
                 </th>
