@@ -106,7 +106,7 @@ new #[Layout('layouts::admin.app'), Title('Depatments | Department List')] class
                 </tr>
             @else
                 @foreach ($this->departments as $department)
-                    <tr>
+                    <tr wire:key="{{ $department->id }}">
                         <th>{{ $loop->index + 1 }}</th>
                         <td>{{ $department->gd_name }}</td>
                         <td>{{ $department->name }}</td>

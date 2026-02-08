@@ -115,7 +115,7 @@ new #[Layout('layouts::admin.app'), Title('Authentication | User List')] class e
                 </tr>
             @else
                 @foreach ($this->users as $user)
-                    <tr>
+                    <tr wire:key="{{ $user->id }}">
                         <th>{{ $loop->index + 1 }}</th>
                         <td class="flex items-center gap-3">
                             <flux:avatar src="{{ $user->avatar_url }}" alt="{{ $user->username }}" circle />

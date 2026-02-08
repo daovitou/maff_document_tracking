@@ -128,7 +128,7 @@ new #[Layout('layouts::admin.app'), Title('Documentation | Document List')] clas
                 </tr>
             @else
                 @foreach ($this->docs as $doc)
-                    <tr>
+                    <tr wire:key="{{ $doc->id }}">
                         <th class="text-left">{{ $doc->code }}</th>
                         <td>{{ $doc->article }}</td>
                         <td>{{ $doc->source }}</td>

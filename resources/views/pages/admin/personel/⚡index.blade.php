@@ -104,7 +104,7 @@ new #[Layout('layouts::admin.app'), Title('Personel | Personel List')] class ext
                 </tr>
             @else
                 @foreach ($this->personels as $personel)
-                    <tr>
+                    <tr wire:key="{{ $personel->id }}">
                         <th class="text-left">{{ $loop->index + 1 }}</th>
                         <td>{{ $personel->name }}</td>
                         <td>{{ $personel->organization }}</td>
