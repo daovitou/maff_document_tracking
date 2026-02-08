@@ -36,7 +36,7 @@ new #[Layout('layouts::admin.app'), Title('Create User')] class extends Componen
                 },
             ],
             'user.email' => ['required'],
-            'user.password' => ['required', 'string', Password::min(8)->mixedCase()->letters()->numbers()->symbols()->uncompromised()],
+            'user.password' => ['required', 'string', Password::min(8)->mixedCase()->letters()->numbers()],
             'user.role_id' => [
                 'required',
                 function ($attribute, $value, $fail) {
