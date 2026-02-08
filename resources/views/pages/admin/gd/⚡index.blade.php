@@ -34,6 +34,10 @@ new #[Layout('layouts::admin.app'), Title('Depatments | Department List')] class
         $gd->save();
         Flux::modal('delete-' . $id)->close();
     }
+     public function updatedSearch()
+    {
+        $this->resetPage();
+    }
     public function search()
     {
         $this->resetPage();

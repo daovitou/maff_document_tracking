@@ -24,6 +24,10 @@ new #[Layout('layouts::admin.app'), Title('Documentation | Follow Up Document Li
             abort(403);
         }
     }
+     public function updatedSearch()
+    {
+        $this->resetPage();
+    }
     public function search()
     {
         $this->resetPage();

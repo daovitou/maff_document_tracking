@@ -26,6 +26,10 @@ new #[Layout('layouts::admin.app'), Title('Depatments | Department List')] class
     {
         return Department::search($this->search)->orderBy($this->sortField, $this->sortDirection)->paginate($this->perPage);
     }
+    public function updatedSearch()
+    {
+        $this->resetPage();
+    }
     public function search()
     {
         $this->resetPage();

@@ -14,6 +14,10 @@ new #[Layout('layouts::admin.app'), Title('Settings | Role List')] class extends
     public $perPage = 10;
     public $sortDirection = 'DESC';
     public $sortField = 'created_at';
+     public function updatedSearch()
+    {
+        $this->resetPage();
+    }
     public function search()
     {
         $this->resetPage();

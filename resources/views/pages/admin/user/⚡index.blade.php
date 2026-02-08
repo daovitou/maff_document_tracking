@@ -23,7 +23,10 @@ new #[Layout('layouts::admin.app'), Title('Authentication | User List')] class e
             abort(403);
         }
     }
-
+    public function updatedSearch()
+    {
+        $this->resetPage();
+    }
     public function search()
     {
         $this->resetPage();

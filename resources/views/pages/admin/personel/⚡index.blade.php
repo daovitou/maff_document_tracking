@@ -18,6 +18,10 @@ new #[Layout('layouts::admin.app'), Title('Personel | Personel List')] class ext
     public $sortDirection = 'DESC';
     public $sortField = 'created_at';
     public $cancel_note = '';
+     public function updatedSearch()
+    {
+        $this->resetPage();
+    }
     public function search()
     {
         $this->resetPage();
