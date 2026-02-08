@@ -180,7 +180,7 @@ new #[Layout('layouts::admin.app'), Title('Create User')] class extends Componen
                 <flux:select wire:model="user.role_id">
                     <flux:select.option value="" class="text-zinc-300">Please select a role</flux:select.option>
                     @foreach ($roles as $role)
-                        <flux:select.option value="{{ $role->id }}">{{ $role->name }}</flux:select.option>
+                        <flux:select.option value="{{ $role->id }}" wire:key="{{$role->id}}">{{ $role->name }}</flux:select.option>
                     @endforeach
                     {{-- <flux:select.option value="admin">Admin</flux:select.option>
                     <flux:select.option value="user">User</flux:select.option>

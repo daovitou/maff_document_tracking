@@ -102,7 +102,7 @@ new #[Layout('layouts::admin.app'), Title('Authentication | Edit User')] class e
                 <flux:select wire:model="user.role_id">
                     <flux:select.option value="" class="text-zinc-300">Please select a role</flux:select.option>
                     @foreach ($roles as $role)
-                        <flux:select.option value="{{ $role->id }}">{{ $role->name }}</flux:select.option>
+                        <flux:select.option value="{{ $role->id }}" wire:key="{{$role->id}}">{{ $role->name }}</flux:select.option>
                     @endforeach
                 </flux:select>
                 <flux:error name="user.role_id" />

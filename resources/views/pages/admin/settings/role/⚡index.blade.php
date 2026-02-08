@@ -89,7 +89,7 @@ new #[Layout('layouts::admin.app'), Title('Settings | Role List')] class extends
                 </tr>
             @else
                 @foreach ($this->roles as $role)
-                    <tr>
+                    <tr wire:key="{{$role->id}}">
                         <th>{{ $loop->index + 1 }}</th>
                         <td>{{ $role->name }}</td>
                         <td>{{ $role->description }}</td>

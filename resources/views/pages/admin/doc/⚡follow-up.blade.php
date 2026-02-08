@@ -129,7 +129,7 @@ new #[Layout('layouts::admin.app'), Title('Documentation | Follow Up Document Li
                 </tr>
             @else
                 @foreach ($this->docs as $doc)
-                    <tr>
+                    <tr wire:key="{{$doc->id}}">
                         <th class="text-left">{{ $doc->code }}</th>
                         <td>{{ $doc->article }}</td>
                         <td>{{ $doc->source }}</td>
