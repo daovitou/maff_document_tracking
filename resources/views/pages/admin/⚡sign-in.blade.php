@@ -36,12 +36,12 @@ new class extends Component {
 
         <x-card>
             <form wire:submit="authenticate" class="space-y-6">
-                <flux:input wire:model="username" label="{{ __('Username') }}" type="text"
+                <flux:input icon="user-circle" wire:model="username" label="{{ __('Username') }}" type="text"
                     placeholder="{{ __('Username') }}" autofocus />
 
                 <div class="space-y-2">
-                    <flux:input wire:model="password" label="{{ __('Password') }}" type="password"
-                        placeholder="••••••••" viewable />
+                    <flux:input icon="key" type="password" wire:model="password" viewable 
+                        placeholder="••••••••" />
                     {{-- <div class="flex justify-end">
                         <flux:link href="/forgot-password" variant="subtle" class="text-sm">
                             {{__("Forgot password")}}?
