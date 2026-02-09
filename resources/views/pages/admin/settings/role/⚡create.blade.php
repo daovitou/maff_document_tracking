@@ -115,7 +115,7 @@ new #[Layout('layouts::admin.app'), Title('Settings | New Role')] class extends 
 
                 <tr>
                     <th colspan="5" class="bg-zinc-400 text-left">
-                        {{ __('Organization') }}
+                        {{ __('Organization2') }}
                     </th>
                 </tr>
                 <tr>

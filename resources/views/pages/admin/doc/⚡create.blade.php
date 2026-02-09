@@ -90,7 +90,7 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
         $this->personels = $qpersonels->map(function ($item) {
             return [
                 'value' => $item->id,
-                'label' => $item->name,
+                'label' => $item->name . ' - ( ' . $item->position . ' ) ',
             ];
         });
         $this->document = new Document();

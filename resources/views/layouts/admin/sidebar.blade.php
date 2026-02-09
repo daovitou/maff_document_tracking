@@ -1,7 +1,7 @@
  <flux:sidebar sticky collapsible="mobile"
      class="bg-zinc-50 dark:bg-zinc-900 border-r border-zinc-200 dark:border-zinc-700">
      <flux:sidebar.header>
-         <flux:sidebar.brand href="#" logo="https://fluxui.dev/img/demo/logo.png"
+         <flux:sidebar.brand href="#" logo="{{asset('images/logo.jpg')}}"
              logo:dark="https://fluxui.dev/img/demo/dark-mode-logo.png" name="{{ __('Document Application') }}" />
          <flux:sidebar.collapse class="lg:hidden" />
      </flux:sidebar.header>
@@ -50,7 +50,7 @@
                          {{ __('General Department List') }}
                      </flux:sidebar.item>
                  @endif
-                 @if (Gate::forUser(auth('admin')->user())->allows('view-general-department'))
+                 @if (Gate::forUser(auth('admin')->user())->allows('create-general-department'))
                      <flux:sidebar.item href="{{ route('admin.gd.create') }}"
                          :current="request()->routeIs('admin.gd.create')" wire:navigate>
                          {{ __('New General Department') }}

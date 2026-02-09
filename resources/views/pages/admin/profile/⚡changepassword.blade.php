@@ -19,7 +19,7 @@ new #[Layout('layouts::admin.app'), Title('Profile | Change Password')] class ex
     {
         return [
             'oldPassword' => ['required'],
-            'password' => ['required', 'confirmed', Password::min(8)->mixedCase()->letters()->numbers()->symbols()->uncompromised()],
+            'password' => ['required', 'confirmed', Password::min(8)->mixedCase()->letters()->numbers()],
         ];
     }
     public function messages()
