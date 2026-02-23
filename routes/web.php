@@ -22,13 +22,37 @@ Route::middleware(['locale'])->prefix('admin')->name('admin.')->group(function (
         Route::livewire('profile', 'pages::admin.profile.info')->name('profile');
         Route::livewire('change-password', 'pages::admin.profile.changepassword')->name('changepassword');
 
-        Route::prefix('docs')->name('doc.')->group(function () {
-            Route::livewire("", 'pages::admin.doc.index')->name('index');
-            Route::livewire("follow-up", 'pages::admin.doc.follow-up')->name('followup');
-            Route::livewire("create", 'pages::admin.doc.create')->name('create');
-            Route::livewire("{id}", 'pages::admin.doc.view')->name('view');
-            Route::livewire("{id}/edit", 'pages::admin.doc.edit')->name('edit');
-            Route::livewire("{id}/return", 'pages::admin.doc.return')->name('return');
+        // Route::prefix('docs')->name('doc.')->group(function () {
+        //     Route::livewire("", 'pages::admin.doc.index')->name('index');
+        //     Route::livewire("follow-up", 'pages::admin.doc.follow-up')->name('followup');
+        //     Route::livewire("create", 'pages::admin.doc.create')->name('create');
+        //     Route::livewire("{id}", 'pages::admin.doc.view')->name('view');
+        //     Route::livewire("{id}/edit", 'pages::admin.doc.edit')->name('edit');
+        //     Route::livewire("{id}/return", 'pages::admin.doc.return')->name('return');
+        // });
+        Route::prefix('note-documents')->name('note-document.')->group(function () {
+            Route::livewire("", 'pages::admin.note_document.index')->name('index');
+            Route::livewire("follow-up", 'pages::admin.note_document.follow-up')->name('followup');
+            Route::livewire("create", 'pages::admin.note_document.create')->name('create');
+            // Route::livewire("{id}", 'pages::admin.note_document.view')->name('view');
+            Route::livewire("{id}/edit", 'pages::admin.note_document.edit')->name('edit');
+            Route::livewire("{id}/return", 'pages::admin.note_document.return')->name('return');
+            Route::name('send-to.')->group(function () {
+                Route::livewire("{id}/send-to/{send_to_id}", 'pages::admin.note_document.send_to.view')->name('view');
+                Route::livewire("{id}/send-to/{send_to_id}/edit", 'pages::admin.note_document.send_to.edit')->name('edit');
+            });
+        });
+        Route::prefix('be-documents')->name('be-document.')->group(function () {
+            Route::livewire("", 'pages::admin.be_document.index')->name('index');
+            Route::livewire("follow-up", 'pages::admin.be_document.follow-up')->name('followup');
+            Route::livewire("create", 'pages::admin.be_document.create')->name('create');
+            // Route::livewire("{id}", 'pages::admin.be_document.view')->name('view');
+            Route::livewire("{id}/edit", 'pages::admin.be_document.edit')->name('edit');
+            Route::livewire("{id}/return", 'pages::admin.be_document.return')->name('return');
+            Route::name('send-to.')->group(function () {
+                Route::livewire("{id}/send-to/{send_to_id}", 'pages::admin.be_document.send_to.view')->name('view');
+                Route::livewire("{id}/send-to/{send_to_id}/edit", 'pages::admin.be_document.send_to.edit')->name('edit');
+            });
         });
         Route::prefix('users')->name('user.')->group(function () {
             Route::livewire("", 'pages::admin.user.index')->name('index');
@@ -56,6 +80,11 @@ Route::middleware(['locale'])->prefix('admin')->name('admin.')->group(function (
                     Route::livewire("", 'pages::admin.settings.role.index')->name('index');
                     Route::livewire("create", 'pages::admin.settings.role.create')->name('create');
                     Route::livewire("{id}/edit", 'pages::admin.settings.role.edit')->name('edit');
+                });
+                Route::prefix('users')->name('users.')->group(function () {
+                    Route::livewire("", 'pages::admin.settings.users.index')->name('index');
+                    Route::livewire("create", 'pages::admin.settings.users.create')->name('create');
+                    Route::livewire("{id}/edit", 'pages::admin.settings.users.edit')->name('edit');
                 });
             });
         });

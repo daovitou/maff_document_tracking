@@ -31,13 +31,13 @@ new #[Layout('layouts::admin.app'), Title('Departments | Edit Department')] clas
         return [
             'department.name' => [
                 'required',
-                'min:3',
-                function ($attribute, $value, $fail) {
-                    $exists = Department::whereRaw('LOWER(name) = ? AND is_active = ? AND id != ?', [strtolower($value), true, $this->department->id])->exists();
-                    if ($exists) {
-                        $fail(__('Department already exists'));
-                    }
-                },
+                'min:3'
+                // function ($attribute, $value, $fail) {
+                //     $exists = Department::whereRaw('LOWER(name) = ? AND is_active = ? AND id != ?', [strtolower($value), true, $this->department->id])->exists();
+                //     if ($exists) {
+                //         $fail(__('Department already exists'));
+                //     }
+                // },
             ],
             'department.gd_id' => ['required'],
             'department.location' => ['nullable'],

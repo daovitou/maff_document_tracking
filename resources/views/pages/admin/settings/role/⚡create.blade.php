@@ -5,13 +5,20 @@ use Livewire\Attributes\Title;
 use Livewire\Attributes\Layout;
 use App\Models\Role;
 use App\Models\Permission;
-
+use App\Models\Gd;
+use Livewire\Attributes\Computed;
+use Illuminate\Support\Facades\Gate;
 new #[Layout('layouts::admin.app'), Title('Settings | New Role')] class extends Component {
     //
     public $role;
     public $permissions;
     public $selectedPermissions;
-    public function __construct() {}
+    public function __construct()
+    {
+        if (!Auth::guard('admin')->user()->is_system) {
+            abort(403);
+        }
+    }
     public function rules()
     {
         return [
@@ -47,6 +54,19 @@ new #[Layout('layouts::admin.app'), Title('Settings | New Role')] class extends 
         $this->role->save();
         return $this->redirectIntended(route('admin.setting.role.index'), true);
     }
+    #[Computed]
+    public function gds()
+    {
+        return Gd::where('is_active', true)
+            ->orderBy('name', 'asc')
+            ->get()
+            ->map(function ($item) {
+                return [
+                    'value' => $item->id,
+                    'label' => $item->name,
+                ];
+            });
+    }
 };
 ?>
 
@@ -54,8 +74,8 @@ new #[Layout('layouts::admin.app'), Title('Settings | New Role')] class extends 
     <flux:heading size="xl" level="1">{{ __('Settings') }}</flux:heading>
     <flux:text class="mb-6 mt-2 text-xl">{{ __('New Role') }}</flux:text>
     <flux:separator variant="subtle" class="my-6" />
-    <form wire:submit.prevent="save" enctype="multipart/form-data" class="w-full max-w-lg">
-        <flux:field>
+    <form wire:submit.prevent="save" enctype="multipart/form-data" class="w-full lg:w-2/3">
+        <flux:field class="mt-4">
             <flux:label>
                 {{ __('Role Name') }}
                 <flux:badge size="xs" color="red" class="ml-1">
@@ -75,7 +95,7 @@ new #[Layout('layouts::admin.app'), Title('Settings | New Role')] class extends 
             <flux:input icon="chat-bubble-left-ellipsis" type="text" wire:model="role.description" />
             <flux:error name="role.description" />
         </flux:field>
-        <table class="table mt-6 max-w-lg">
+        <table class="table mt-6 w-full">
             <thead class="">
                 <tr>
                     <th>
@@ -99,20 +119,18 @@ new #[Layout('layouts::admin.app'), Title('Settings | New Role')] class extends 
                         - {{ __('User') }}
                     </th>
                     <td>
-                        <flux:checkbox wire:model="selectedPermissions" value="view-user" />
+                        <flux:checkbox wire:model="selectedPermissions" value="view-user" class="block mx-auto" />
                     </td>
                     <td>
-                        <flux:checkbox wire:model="selectedPermissions" value="create-user" />
+                        <flux:checkbox wire:model="selectedPermissions" value="create-user" class="block mx-auto" />
                     </td>
                     <td>
-                        <flux:checkbox wire:model="selectedPermissions" value="edit-user" />
+                        <flux:checkbox wire:model="selectedPermissions" value="edit-user" class="block mx-auto" />
                     </td>
                     <td>
-                        <flux:checkbox wire:model="selectedPermissions" value="delete-user" />
+                        <flux:checkbox wire:model="selectedPermissions" value="delete-user" class="block mx-auto" />
                     </td>
                 </tr>
-
-
                 <tr>
                     <th colspan="5" class="bg-zinc-400 text-left">
                         {{ __('Organization2') }}
@@ -123,16 +141,20 @@ new #[Layout('layouts::admin.app'), Title('Settings | New Role')] class extends 
                         - {{ __('General Department') }}
                     </th>
                     <td>
-                        <flux:checkbox wire:model="selectedPermissions" value="view-general-department" />
+                        <flux:checkbox wire:model="selectedPermissions" value="view-general-department"
+                            class="block mx-auto" />
                     </td>
                     <td>
-                        <flux:checkbox wire:model="selectedPermissions" value="create-general-department" />
+                        <flux:checkbox wire:model="selectedPermissions" value="create-general-department"
+                            class="block mx-auto" />
                     </td>
                     <td>
-                        <flux:checkbox wire:model="selectedPermissions" value="edit-general-department" />
+                        <flux:checkbox wire:model="selectedPermissions" value="edit-general-department"
+                            class="block mx-auto" />
                     </td>
                     <td>
-                        <flux:checkbox wire:model="selectedPermissions" value="delete-general-department" />
+                        <flux:checkbox wire:model="selectedPermissions" value="delete-general-department"
+                            class="block mx-auto" />
                     </td>
                 </tr>
                 <tr>
@@ -140,16 +162,18 @@ new #[Layout('layouts::admin.app'), Title('Settings | New Role')] class extends 
                         - {{ __('Department') }}
                     </th>
                     <td>
-                        <flux:checkbox wire:model="selectedPermissions" value="view-department" />
+                        <flux:checkbox wire:model="selectedPermissions" value="view-department" class="block mx-auto" />
                     </td>
                     <td>
-                        <flux:checkbox wire:model="selectedPermissions" value="create-department" />
+                        <flux:checkbox wire:model="selectedPermissions" value="create-department"
+                            class="block mx-auto" />
                     </td>
                     <td>
-                        <flux:checkbox wire:model="selectedPermissions" value="edit-department" />
+                        <flux:checkbox wire:model="selectedPermissions" value="edit-department" class="block mx-auto" />
                     </td>
                     <td>
-                        <flux:checkbox wire:model="selectedPermissions" value="delete-department" />
+                        <flux:checkbox wire:model="selectedPermissions" value="delete-department"
+                            class="block mx-auto" />
                     </td>
                 </tr>
 
@@ -163,16 +187,17 @@ new #[Layout('layouts::admin.app'), Title('Settings | New Role')] class extends 
                         - {{ __('Personel') }}
                     </th>
                     <td>
-                        <flux:checkbox wire:model="selectedPermissions" value="view-personel" />
+                        <flux:checkbox wire:model="selectedPermissions" value="view-personel" class="block mx-auto" />
                     </td>
                     <td>
-                        <flux:checkbox wire:model="selectedPermissions" value="create-personel" />
+                        <flux:checkbox wire:model="selectedPermissions" value="create-personel" class="block mx-auto" />
                     </td>
                     <td>
-                        <flux:checkbox wire:model="selectedPermissions" value="edit-personel" />
+                        <flux:checkbox wire:model="selectedPermissions" value="edit-personel" class="block mx-auto" />
                     </td>
                     <td>
-                        <flux:checkbox wire:model="selectedPermissions" value="delete-personel" />
+                        <flux:checkbox wire:model="selectedPermissions" value="delete-personel"
+                            class="block mx-auto" />
                     </td>
                 </tr>
 
@@ -183,19 +208,44 @@ new #[Layout('layouts::admin.app'), Title('Settings | New Role')] class extends 
                 </tr>
                 <tr>
                     <th class="text-right">
-                        - {{ __('Document') }}
+                        - {{ __('Note Documentation') }}
                     </th>
                     <td>
-                        <flux:checkbox wire:model="selectedPermissions" value="view-document" />
+                        <flux:checkbox wire:model="selectedPermissions" value="view-note-document"
+                            class="block mx-auto" />
                     </td>
                     <td>
-                        <flux:checkbox wire:model="selectedPermissions" value="create-document" />
+                        <flux:checkbox wire:model="selectedPermissions" value="create-note-document"
+                            class="block mx-auto" />
                     </td>
                     <td>
-                        <flux:checkbox wire:model="selectedPermissions" value="edit-document" />
+                        <flux:checkbox wire:model="selectedPermissions" value="edit-note-document"
+                            class="block mx-auto" />
                     </td>
                     <td>
-                        <flux:checkbox wire:model="selectedPermissions" value="delete-document" />
+                        <flux:checkbox wire:model="selectedPermissions" value="delete-note-document"
+                            class="block mx-auto" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="text-right">
+                        - {{ __('BE Document') }}
+                    </th>
+                    <td>
+                        <flux:checkbox wire:model="selectedPermissions" value="view-be-document"
+                            class="block mx-auto" />
+                    </td>
+                    <td>
+                        <flux:checkbox wire:model="selectedPermissions" value="create-be-document"
+                            class="block mx-auto" />
+                    </td>
+                    <td>
+                        <flux:checkbox wire:model="selectedPermissions" value="edit-be-document"
+                            class="block mx-auto" />
+                    </td>
+                    <td>
+                        <flux:checkbox wire:model="selectedPermissions" value="delete-be-document"
+                            class="block mx-auto" />
                     </td>
                 </tr>
             </tbody>
@@ -232,7 +282,7 @@ new #[Layout('layouts::admin.app'), Title('Settings | New Role')] class extends 
         class="fixed inset-0 bg-zinc-100/20 bg-opacity-50 backdrop-blur-sm z-50 items-center justify-center">
         <div class="bg-white p-6 rounded-lg shadow-xl flex flex-col items-center">
             <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-lime-600"></div>
-            <p class="mt-4 text-zinc-700 font-semibold animate-pulse">{{__("Processing your request")}}...</p>
+            <p class="mt-4 text-zinc-700 font-semibold animate-pulse">{{ __('Processing your request') }}...</p>
         </div>
     </div>
 </div>

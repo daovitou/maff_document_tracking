@@ -19,6 +19,8 @@ return new class extends Migration
             $table->string('location')->nullable();
             $table->string('phone')->nullable();
             $table->boolean('is_active')->default(true);
+            $table->uuid('created_by')->nullable()->constrained('admins','id')->nullOnDelete();
+            $table->uuid('updated_by')->nullable()->constrained('admins','id')->nullOnDelete();
             $table->timestamps();
         });
     }

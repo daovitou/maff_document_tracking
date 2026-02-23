@@ -17,6 +17,8 @@ return new class extends Migration
             $table->string('heading');
             $table->string('slug')->nullable();
             $table->string('description')->nullable();
+            $table->uuid('created_by')->nullable()->constrained('admins','id')->nullOnDelete();
+            $table->uuid('updated_by')->nullable()->constrained('admins','id')->nullOnDelete();
             $table->timestamps();
         });
     }

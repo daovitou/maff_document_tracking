@@ -93,6 +93,7 @@ new #[Layout('layouts::admin.app'), Title('Authentication | User List')] class e
                             :sortDirection="$sortDirection" />
                     </span>
                 </th>
+               
                 <th class="text-left" wire:click="doSort('email')">
                     <span class="flex items-center justify-between">
                         <x-datatable-header displayName="{{ __('Email') }}" field="email" :sortField="$sortField"
@@ -112,7 +113,7 @@ new #[Layout('layouts::admin.app'), Title('Authentication | User List')] class e
         <tbody>
             @if (count($this->users) < 1)
                 <tr>
-                    <td colspan="6" class="text-center font-semibold bg-zinc-100">
+                    <td colspan="7" class="text-center font-semibold bg-zinc-100">
                         {{ __('No User Found') }}
                     </td>
                 </tr>
@@ -130,6 +131,7 @@ new #[Layout('layouts::admin.app'), Title('Authentication | User List')] class e
                             </div>
                         </td>
                         <td>{{ $user->role->name }}</td>
+                        
                         <td>{{ $user->email }}</td>
                         <td>{{ Carbon::parse($user->created_at)->diffForHumans() }}</td>
                         <td class="flex items-center gap-3">

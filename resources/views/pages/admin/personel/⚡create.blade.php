@@ -12,6 +12,7 @@ new #[Layout('layouts::admin.app'), Title('Personel | New Personel')] class exte
     public function mount()
     {
         $this->personel = new Personel();
+        $this->personel->order =1;
     }
     public function rules()
     {
@@ -22,6 +23,7 @@ new #[Layout('layouts::admin.app'), Title('Personel | New Personel')] class exte
             'personel.phone' => ['nullable'],
             'personel.email' => ['nullable'],
             'personel.note' => ['nullable'],
+            'personel.order' => ['nullable'],
         ];
     }
     public function messages()
@@ -97,6 +99,16 @@ new #[Layout('layouts::admin.app'), Title('Personel | New Personel')] class exte
             </flux:field>
             <flux:field class="mt-4">
                 <flux:label>
+                    {{ __('Order') }}
+                    <flux:badge size="xs" class="ml-1">
+                        {{ __('Optional') }}
+                    </flux:badge>
+                </flux:label>
+                <flux:input icon="numbered-list" type="number" wire:model="personel.order" />
+                <flux:error name="personel.order" />
+            </flux:field>
+            <flux:field class="mt-4">
+                <flux:label>
                     {{ __('Note') }}
                     <flux:badge size="xs" class="ml-1">
                         {{ __('Optional') }}
@@ -120,7 +132,7 @@ new #[Layout('layouts::admin.app'), Title('Personel | New Personel')] class exte
         class="fixed inset-0 bg-zinc-100/20 bg-opacity-50 backdrop-blur-sm z-50 items-center justify-center">
         <div class="bg-white p-6 rounded-lg shadow-xl flex flex-col items-center">
             <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-lime-600"></div>
-            <p class="mt-4 text-zinc-700 font-semibold animate-pulse">{{__("Processing your request")}}...</p>
+            <p class="mt-4 text-zinc-700 font-semibold animate-pulse">{{ __('Processing your request') }}...</p>
         </div>
     </div>
 </div>

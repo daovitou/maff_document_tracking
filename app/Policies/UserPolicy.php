@@ -24,6 +24,8 @@ class UserPolicy
     }
     public function create()
     {
+        // $permissions = Auth::guard('admin')->user()->role->permissions ?? [];
+        // return in_array("create-user", $permissions);
         if (Auth::guard('admin')->user()->is_system) {
             return true;
         } else {
@@ -33,6 +35,8 @@ class UserPolicy
     }
     public function edit()
     {
+        // $permissions = Auth::guard('admin')->user()->role->permissions ?? [];
+        // return in_array("edit-user", $permissions);
         if (Auth::guard('admin')->user()->is_system) {
             return true;
         } else {
@@ -42,6 +46,8 @@ class UserPolicy
     }
     public function delete()
     {
+        // $permissions = Auth::guard('admin')->user()->role->permissions ?? [];
+        // return in_array("delete-user", $permissions);
         if (Auth::guard('admin')->user()->is_system) {
             return true;
         } else {
@@ -51,6 +57,8 @@ class UserPolicy
     }
     public function view()
     {
+        // $permissions = Auth::guard('admin')->user()->role->permissions ?? [];
+        // return in_array("view-user", $permissions);
         if (Auth::guard('admin')->user()->is_system) {
             return true;
         } else {
@@ -60,6 +68,8 @@ class UserPolicy
     }
     public function forceDelete()
     {
+        // $permissions = Auth::guard('admin')->user()->role->permissions ?? [];
+        // return in_array("soft-delete-user", $permissions);
         if (Auth::guard('admin')->user()->is_system) {
             return true;
         } else {

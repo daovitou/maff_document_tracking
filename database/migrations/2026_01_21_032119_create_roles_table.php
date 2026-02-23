@@ -17,6 +17,9 @@ return new class extends Migration
             $table->string('description')->nullable();
             $table->json('permissions')->nullable();
             $table->boolean('is_active')->default(true);
+            $table->uuid('gd_id')->nullable()->constrained('gds','id')->nullOnDelete();
+            $table->uuid('created_by')->nullable()->constrained('admins','id')->nullOnDelete();
+            $table->uuid('updated_by')->nullable()->constrained('admins','id')->nullOnDelete();
             $table->timestamps();
         });
     }

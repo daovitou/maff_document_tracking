@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::create('roles_permissions', function (Blueprint $table) {
             $table->uuid('role_id');
             $table->uuid('permission_id');
+            $table->uuid('created_by')->nullable()->constrained('admins','id')->nullOnDelete();
+            $table->uuid('updated_by')->nullable()->constrained('admins','id')->nullOnDelete();
             $table->timestamps();
         });
     }

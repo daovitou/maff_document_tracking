@@ -22,6 +22,7 @@ new #[Layout('layouts::admin.app'), Title('Personel | Edit Personel')] class ext
             'personel.phone' => ['nullable'],
             'personel.email' => ['nullable'],
             'personel.note' => ['nullable'],
+            'personel.order' => ['nullable'],
         ];
     }
     public function messages()
@@ -95,6 +96,16 @@ new #[Layout('layouts::admin.app'), Title('Personel | Edit Personel')] class ext
                 </flux:label>
                 <flux:input icon="phone" type="text" wire:model="personel.phone" />
                 <flux:error name="personel.phone" />
+            </flux:field>
+             <flux:field class="mt-4">
+                <flux:label>
+                    {{ __('Order') }}
+                    <flux:badge size="xs" class="ml-1">
+                        {{ __('Optional') }}
+                    </flux:badge>
+                </flux:label>
+                <flux:input icon="numbered-list" type="number" wire:model="personel.order" />
+                <flux:error name="personel.order" />
             </flux:field>
             <flux:field class="mt-4">
                 <flux:label>

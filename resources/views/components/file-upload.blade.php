@@ -30,7 +30,7 @@
 }" x-on:livewire-upload-start="isUploading = true; progress = 0"
     x-on:livewire-upload-finish="isUploading = false; progress = 100"
     x-on:livewire-upload-error="isUploading = false; error = 'Upload failed.'"
-    x-on:livewire-upload-progress="progress = $event.detail.progress" class="w-full max-w-xl font-sans">
+    x-on:livewire-upload-progress="progress = $event.detail.progress" class="w-full font-sans">
     <div class="flex justify-between items-end">
         <h3 class="text-gray-800 text-lg font-semibold">{{ $label }}</h3>
         {{-- <span class="text-xs text-gray-400">Max {{ $maxSize }}MB</span> --}}

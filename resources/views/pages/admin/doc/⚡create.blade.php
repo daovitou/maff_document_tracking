@@ -142,7 +142,7 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
         $this->document->send_at = $this->send_at;
         if ($this->document_file) {
             $this->document->document_file = $this->document_file->store('files', 'public');
-        }
+        };
         $this->document->save();
         return $this->redirectIntended(route('admin.doc.index'), true);
     }

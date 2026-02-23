@@ -81,7 +81,6 @@ new #[Layout('layouts::admin.app'), Title('Create User')] class extends Componen
     public function save()
     {
         $this->validate();
-        sleep(2);
         if ($this->avatar) {
             $this->user->avatar = $this->avatar->store('profiles', 'public');
         }

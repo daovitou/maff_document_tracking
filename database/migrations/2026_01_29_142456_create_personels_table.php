@@ -18,8 +18,11 @@ return new class extends Migration
             $table->string('position')->nullable();
             $table->string('email')->nullable();
             $table->string('phone')->nullable();
+            $table->integer('order')->default(1);
             $table->string('note')->nullable();
             $table->timestamp("deleted_at")->nullable();
+            $table->uuid('created_by')->nullable()->constrained('admins','id')->nullOnDelete();
+            $table->uuid('updated_by')->nullable()->constrained('admins','id')->nullOnDelete();
             $table->timestamps();
         });
     }

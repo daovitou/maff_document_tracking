@@ -30,6 +30,8 @@ return new class extends Migration
             $table->text("send_note")->nullable();
             $table->text("cancel_note")->nullable();
             $table->text("return_note")->nullable();
+            $table->uuid('created_by')->nullable()->constrained('admins','id')->nullOnDelete();
+            $table->uuid('updated_by')->nullable()->constrained('admins','id')->nullOnDelete();
             $table->timestamps();
         });
     }

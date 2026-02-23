@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class Role extends Model
 {
@@ -13,8 +14,13 @@ class Role extends Model
     protected $casts = [
         'permissions' => 'array',
     ];
-    public function users(){
+    public function users()
+    {
         return $this->hasMany(Admin::class, "id", "role_id");
+    }
+    public function gd()
+    {
+        return $this->belongsTo(Gd::class, "gd_id", "id");
     }
     public function scopeSearch($query, $value)
     {

@@ -15,8 +15,8 @@ new #[Layout('layouts::admin.app'), Title('Personel | Personel List')] class ext
     use WithPagination, WithoutUrlPagination;
     public $search = '';
     public $perPage = 10;
-    public $sortDirection = 'DESC';
-    public $sortField = 'created_at';
+    public $sortDirection = 'ASC';
+    public $sortField = 'order';
     public $cancel_note = '';
      public function updatedSearch()
     {
@@ -67,8 +67,11 @@ new #[Layout('layouts::admin.app'), Title('Personel | Personel List')] class ext
     <table class="min-w-full table mt-6">
         <thead class="">
             <tr>
-                <th class="text-left">
-                    Nº
+                <th class="text-left" wire:click="doSort('order')">
+                    <span class="flex items-center justify-between">
+                        <x-datatable-header displayName="Nº" field="order" :sortField="$sortField"
+                            :sortDirection="$sortDirection" />
+                    </span>
                 </th>
                 <th class="text-left" wire:click="doSort('name')">
                     <span class="flex items-center justify-between">
@@ -109,7 +112,8 @@ new #[Layout('layouts::admin.app'), Title('Personel | Personel List')] class ext
             @else
                 @foreach ($this->personels as $personel)
                     <tr wire:key="{{ $personel->id }}">
-                        <th class="text-left">{{ $loop->index + 1 }}</th>
+                        {{-- <th class="text-left">{{ $loop->index + 1 }}</th> --}}
+                        <th class="text-left">{{ $personel->order }}</th>
                         <td>{{ $personel->name }}</td>
                         <td>{{ $personel->organization }}</td>
                         <td>{{ $personel->position }}</td>

@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Layout;
 use App\Models\Role;
+use Illuminate\Support\Facades\Gate;
 new #[Layout('layouts::admin.app'), Title('Settings | Role List')] class extends Component {
     //
     use WithPagination, WithoutUrlPagination;
@@ -14,7 +15,13 @@ new #[Layout('layouts::admin.app'), Title('Settings | Role List')] class extends
     public $perPage = 10;
     public $sortDirection = 'DESC';
     public $sortField = 'created_at';
-     public function updatedSearch()
+    public function __construct()
+    {
+        if (!Auth::guard('admin')->user()->is_system) {
+            abort(403);
+        }
+    }
+    public function updatedSearch()
     {
         $this->resetPage();
     }
@@ -32,7 +39,8 @@ new #[Layout('layouts::admin.app'), Title('Settings | Role List')] class extends
         $this->sortField = $field;
     }
 
-    public function delete($id,$status) {
+    public function delete($id, $status)
+    {
         $role = Role::find($id);
         $role->is_active = !$status;
         $role->save();
@@ -69,6 +77,7 @@ new #[Layout('layouts::admin.app'), Title('Settings | Role List')] class extends
                             :sortDirection="$sortDirection" />
                     </span>
                 </th>
+
                 <th class="text-left" wire:click="doSort('description')">
                     <span class="flex items-center justify-between">
                         <x-datatable-header displayName="{{ __('Description') }}" field="description" :sortField="$sortField"
@@ -93,11 +102,14 @@ new #[Layout('layouts::admin.app'), Title('Settings | Role List')] class extends
                 </tr>
             @else
                 @foreach ($this->roles as $role)
-                    <tr wire:key="{{$role->id}}">
+                    <tr wire:key="{{ $role->id }}">
                         <th>{{ $loop->index + 1 }}</th>
                         <td>{{ $role->name }}</td>
                         <td>{{ $role->description }}</td>
-                        <td> <flux:badge color="{{$role->is_active ? 'lime' : 'red'}}" size="sm">{{ $role->is_active ? 'Active' : 'Inactive' }}</flux:badge></td>
+                        <td>
+                            <flux:badge color="{{ $role->is_active ? 'lime' : 'red' }}" size="sm">
+                                {{ $role->is_active ? 'Active' : 'Inactive' }}</flux:badge>
+                        </td>
                         <td class="flex items-center gap-3">
                             <a href="{{ route('admin.setting.role.edit', $role->id) }}" class="cursor-default"
                                 wire:navigate>
@@ -111,7 +123,8 @@ new #[Layout('layouts::admin.app'), Title('Settings | Role List')] class extends
                                 </flux:heading>
                                 <flux:text class="mt-2 mb-6">Are you sure to switch status on : {{ $role->name }}?
                                 </flux:text>
-                                <flux:button variant="danger" wire:click="delete('{{ $role->id }}','{{ $role->is_active }}')"
+                                <flux:button variant="danger"
+                                    wire:click="delete('{{ $role->id }}','{{ $role->is_active }}')"
                                     class="float-end">
                                     {{ __('Confirm') }}
                                 </flux:button>

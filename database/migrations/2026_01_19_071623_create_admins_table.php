@@ -19,12 +19,16 @@ return new class extends Migration
             $table->string('password');
             $table->string('phone')->nullable();
             $table->string('avatar')->nullable();
-            $table->uuid('role_id')->nullable()->constrained('roles','id')->nullOnDelete();
+            $table->uuid('role_id')->nullable()->constrained('roles', 'id')->nullOnDelete();
             $table->string('status')->default('active');
             $table->boolean('is_system')->default('0');
-            $table->timestamp('email_verified_at')->nullable(); 
+            $table->timestamp('email_verified_at')->nullable();
             $table->timestamp('deleted_at')->nullable();
+            $table->uuid("gd_id")->nullable()->constrained("gds", "id")->cascadeOnDelete("set null");
+            $table->uuid("department_id")->nullable()->constrained("departments", "id")->cascadeOnDelete("set null");
             $table->rememberToken();
+            $table->uuid('created_by')->nullable()->constrained('admins', 'id')->nullOnDelete();
+            $table->uuid('updated_by')->nullable()->constrained('admins', 'id')->nullOnDelete();
             $table->timestamps();
         });
     }

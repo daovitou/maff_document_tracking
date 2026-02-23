@@ -2,9 +2,11 @@
 
 namespace App\Providers;
 
+use App\Policies\BeDocumentPolicy;
 use App\Policies\DepartmentPolicy;
 use App\Policies\DocumentPolicy;
 use App\Policies\GeneralDepartmentPolicy;
+use App\Policies\NoteDocumentPolicy;
 use App\Policies\PersonelPolicy;
 use App\Policies\UserPolicy;
 use Illuminate\Support\Facades\Schema;
@@ -39,6 +41,16 @@ class AppServiceProvider extends ServiceProvider
         Gate::define('create-document', [DocumentPolicy::class, 'create']);
         Gate::define('edit-document', [DocumentPolicy::class, 'edit']);
         Gate::define('delete-document', [DocumentPolicy::class, 'delete']);
+        // ======= Note Document =======
+        Gate::define('view-note-document', [NoteDocumentPolicy::class, 'view']);
+        Gate::define('create-note-document', [NoteDocumentPolicy::class, 'create']);
+        Gate::define('edit-note-document', [NoteDocumentPolicy::class, 'edit']);
+        Gate::define('delete-note-document', [NoteDocumentPolicy::class, 'delete']);
+        // ======= Be Document =======
+        Gate::define('view-be-document', [BeDocumentPolicy::class, 'view']);
+        Gate::define('create-be-document', [BeDocumentPolicy::class, 'create']);
+        Gate::define('edit-be-document', [BeDocumentPolicy::class, 'edit']);
+        Gate::define('delete-be-document', [BeDocumentPolicy::class, 'delete']);
         // ======= Department =======
         Gate::define('view-department', [DepartmentPolicy::class, 'view']);
         Gate::define('create-department', [DepartmentPolicy::class, 'create']);
