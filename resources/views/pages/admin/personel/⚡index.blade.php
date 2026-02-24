@@ -50,8 +50,8 @@ new #[Layout('layouts::admin.app'), Title('Personel | Personel List')] class ext
 ?>
 
 <div>
-    <flux:heading size="xl" level="1">{{ __('Personel') }}</flux:heading>
-    <flux:text class="mb-6 mt-2 text-xl">{{ __('Personel List') }}</flux:text>
+    <flux:heading size="xl" level="1">{{ __('Personel List') }}</flux:heading>
+    {{-- <flux:text class="mb-6 mt-2 text-xl">{{ __('Personel List') }}</flux:text> --}}
     <flux:separator variant="subtle" class="my-6" />
     <div class="flex items-center justify-between mb-4">
         <form wire:submit="search" class="flex gap-4 items-center">
@@ -126,7 +126,7 @@ new #[Layout('layouts::admin.app'), Title('Personel | Personel List')] class ext
                             @endif
                             @if (Gate::forUser(auth('admin')->user())->allows('delete-general-department'))
                                 <x-ri-delete-bin-5-line class="w-6 h-6 text-red-500"
-                                    x-on:click="$flux.modal('delete-{{ $personel->id }}').show()" />
+                                     x-on:click="$flux.modal('delete-{{ $personel->id }}').show()" />
                                 <flux:modal name="delete-{{ $personel->id }}">
                                     <flux:heading class="text-left text-lg font-bold text-red-500 ">
                                         {{ __('Confirm') }}
