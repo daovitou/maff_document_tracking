@@ -54,8 +54,8 @@ new #[Layout('layouts::admin.app'), Title('Depatments | Department List')] class
 ?>
 
 <div>
-    <flux:heading size="xl" level="1">{{ __('Department') }}</flux:heading>
-    <flux:text class="mb-6 mt-2 text-xl">{{ __('Department List') }}</flux:text>
+    <flux:heading size="xl" level="1">{{ __('Department List') }}</flux:heading>
+    {{-- <flux:text class="mb-6 mt-2 text-xl">{{ __('Department List') }}</flux:text> --}}
     <flux:separator variant="subtle" class="my-6" />
     <div class="flex items-center justify-between mb-4">
         <form wire:submit="search" class="flex gap-4 items-center">
@@ -73,19 +73,19 @@ new #[Layout('layouts::admin.app'), Title('Depatments | Department List')] class
         <thead class="">
             <tr>
                 <th>{{ __('Nº') }}</th>
-
+                <th class="text-left" wire:click="doSort('name')">
+                    <span class="flex items-center justify-between">
+                        <x-datatable-header displayName="{{ __('Department') }}" field="name" :sortField="$sortField"
+                            :sortDirection="$sortDirection" />
+                    </span>
+                </th>F
                 <th class="text-left" wire:click="doSort('gd_name')">
                     <span class="flex items-center justify-between">
                         <x-datatable-header displayName="{{ __('General Department') }}" field="gd_name"
                             :sortField="$sortField" :sortDirection="$sortDirection" />
                     </span>
                 </th>
-                <th class="text-left" wire:click="doSort('name')">
-                    <span class="flex items-center justify-between">
-                        <x-datatable-header displayName="{{ __('Department') }}" field="name" :sortField="$sortField"
-                            :sortDirection="$sortDirection" />
-                    </span>
-                </th>
+
                 <th class="text-left" wire:click="doSort('description')">
                     <span class="flex items-center justify-between">
                         <x-datatable-header displayName="{{ __('Description') }}" field="description" :sortField="$sortField"
@@ -112,8 +112,8 @@ new #[Layout('layouts::admin.app'), Title('Depatments | Department List')] class
                 @foreach ($this->departments as $department)
                     <tr wire:key="{{ $department->id }}">
                         <th>{{ $loop->index + 1 }}</th>
-                        <td>{{ $department->gd_name }}</td>
                         <td>{{ $department->name }}</td>
+                        <td>{{ $department->gd_name }}</td>
                         <td>{{ $department->description }}</td>
                         <td>{{ $department->phone }}</td>
                         <td class="flex items-center gap-3">
@@ -130,7 +130,8 @@ new #[Layout('layouts::admin.app'), Title('Depatments | Department List')] class
                                     <flux:heading class="text-left text-lg font-bold text-red-500 ">
                                         {{ __('Confirm') }}
                                     </flux:heading>
-                                    <flux:text class="mt-2 mb-6">{{__("Are you sure to ")}}{{__('delete')}} : {{ $department->name }}?
+                                    <flux:text class="mt-2 mb-6">{{ __('Are you sure to ') }}{{ __('delete') }} :
+                                        {{ $department->name }}?
                                     </flux:text>
                                     <flux:button variant="danger"
                                         wire:click="delete('{{ $department->id }}','{{ $department->is_active }}')"

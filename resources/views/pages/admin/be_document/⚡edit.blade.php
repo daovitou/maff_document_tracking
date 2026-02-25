@@ -213,8 +213,8 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
 ?>
 
 <div>
-    <flux:heading size="xl" level="1">{{ __('BE Document') }}</flux:heading>
-    <flux:text class="mb-6 mt-2 text-xl">{{ __('New BE Document') }}</flux:text>
+    <flux:heading size="xl" level="1">{{ __('Edit BE Document') }}</flux:heading>
+    {{-- <flux:text class="mb-6 mt-2 text-xl">{{ __('New BE Document') }}</flux:text> --}}
     <flux:separator variant="subtle" class="my-6" />
     <form wire:submit.prevent="save" enctype="multipart/form-data" class="w-full xl:w-2/3">
         <flux:field class="mt-4">

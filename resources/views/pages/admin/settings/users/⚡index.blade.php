@@ -62,8 +62,8 @@ new #[Layout('layouts::admin.app'), Title('Authentication | User List')] class e
 ?>
 
 <div>
-    <flux:heading size="xl" level="1">{{ __('Authentication') }}</flux:heading>
-    <flux:text class="mb-6 mt-2 text-xl">{{ __('User List') }}</flux:text>
+    <flux:heading size="xl" level="1">{{ __('User List') }}</flux:heading>
+    {{-- <flux:text class="mb-6 mt-2 text-xl">{{ __('User List') }}</flux:text> --}}
     <flux:separator variant="subtle" class="my-6" />
     <div class="flex items-center justify-between mb-4">
         <form wire:submit="search" class="flex gap-4 items-center">

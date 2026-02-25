@@ -54,8 +54,8 @@ new #[Layout('layouts::admin.app'), Title('Settings | Edit Role')] class extends
 ?>
 
 <div>
-    <flux:heading size="xl" level="1">{{ __('Settings') }}</flux:heading>
-    <flux:text class="mb-6 mt-2 text-xl">{{ __('Edit Role') }}</flux:text>
+    <flux:heading size="xl" level="1">{{ __('Edit Role') }}</flux:heading>
+    {{-- <flux:text class="mb-6 mt-2 text-xl">{{ __('Edit Role') }}</flux:text> --}}
     <flux:separator variant="subtle" class="my-6" />
      <form wire:submit.prevent="save" enctype="multipart/form-data" class="w-full lg:w-2/3">
         <flux:field class="mt-4">

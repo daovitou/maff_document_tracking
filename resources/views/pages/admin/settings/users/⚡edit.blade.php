@@ -66,8 +66,8 @@ new #[Layout('layouts::admin.app'), Title('Authentication | Edit User')] class e
 };
 ?>
 <div>
-    <flux:heading size="xl" level="1">{{ __('Authentication') }}</flux:heading>
-    <flux:text class="mb-6 mt-2 text-xl">{{ __('Edit User') }}</flux:text>
+    <flux:heading size="xl" level="1">{{ __('Edit User') }}</flux:heading>
+    {{-- <flux:text class="mb-6 mt-2 text-xl">{{ __('Edit User') }}</flux:text> --}}
     <flux:separator variant="subtle" class="my-6" />
     <form wire:submit.prevent="save" enctype="multipart/form-data"
         class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">

@@ -42,8 +42,8 @@ new #[Layout('layouts::admin.app'), Title('Personel | New Personel')] class exte
 ?>
 
 <div>
-    <flux:heading size="xl" level="1">{{ __('Personel') }}</flux:heading>
-    <flux:text class="mb-6 mt-2 text-xl">{{ __('New Personel') }}</flux:text>
+    <flux:heading size="xl" level="1">{{ __('New Personel') }}</flux:heading>
+    {{-- <flux:text class="mb-6 mt-2 text-xl">{{ __('New Personel') }}</flux:text> --}}
     <flux:separator variant="subtle" class="my-6" />
     <form wire:submit.prevent="save" enctype="multipart/form-data" class="w-full max-w-lg">
         <form wire:submit.prevent="save" enctype="multipart/form-data" class="w-full max-w-lg">

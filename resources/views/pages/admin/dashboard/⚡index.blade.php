@@ -27,7 +27,7 @@ new #[Layout('layouts::admin.app'), Title('Dashboard')] class extends Component 
 ?>
 <div>
     <flux:heading size="xl" level="1">{{ __('Dashboard') }}</flux:heading>
-    <flux:text class="mb-6 mt-2 text-xl">{{ __('Application Summary') }}</flux:text>
+    {{-- <flux:text class="mb-6 mt-2 text-xl">{{ __('Application Summary') }}</flux:text> --}}
     <flux:separator variant="subtle" class="my-6" />
     {{-- <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8">
         <div class="relative bg-amber-100/80 border border-amber-300 rounded-lg h-36 overflow-clip p-4 shadow-lg">

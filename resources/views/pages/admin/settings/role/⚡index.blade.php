@@ -55,8 +55,8 @@ new #[Layout('layouts::admin.app'), Title('Settings | Role List')] class extends
 ?>
 
 <div>
-    <flux:heading size="xl" level="1">{{ __('Settings') }}</flux:heading>
-    <flux:text class="mb-6 mt-2 text-xl">{{ __('Role List') }}</flux:text>
+    <flux:heading size="xl" level="1">{{ __('Role List') }}</flux:heading>
+    {{-- <flux:text class="mb-6 mt-2 text-xl">{{ __('Role List') }}</flux:text> --}}
     <flux:separator variant="subtle" class="my-6" />
     <div class="flex items-center justify-between mb-4">
         <form wire:submit="search" class="flex gap-4 items-center">

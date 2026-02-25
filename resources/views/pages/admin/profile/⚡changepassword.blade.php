@@ -45,8 +45,8 @@ new #[Layout('layouts::admin.app'), Title('Profile | Change Password')] class ex
 ?>
 
 <div>
-    <flux:heading size="xl" level="1">{{ __('Profile') }}</flux:heading>
-    <flux:text class="mb-6 mt-2 text-xl">{{ __('Change Password') }}</flux:text>
+    <flux:heading size="xl" level="1">{{ __('Change Password') }}</flux:heading>
+    {{-- <flux:text class="mb-6 mt-2 text-xl">{{ __('Change Password') }}</flux:text> --}}
     <flux:separator variant="subtle" class="my-6" />
     <form wire:submit.prevent="save" enctype="multipart/form-data" class="w-full max-w-lg">
         <flux:field class="mt-4">

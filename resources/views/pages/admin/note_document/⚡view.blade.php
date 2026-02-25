@@ -48,8 +48,8 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
 ?>
 
 <div>
-    <flux:heading size="xl" level="1">{{ __('Note Documentation') }}</flux:heading>
-    <flux:text class="mb-6 mt-2 text-xl">{{ __('New Document') }}</flux:text>
+    <flux:heading size="xl" level="1">{{ __('Note Documentation Detail') }}</flux:heading>
+    {{-- <flux:text class="mb-6 mt-2 text-xl">{{ __('New Document') }}</flux:text> --}}
     <flux:separator variant="subtle" class="my-6" />
     <div class="flex items-center justify-between mb-4">
         <form wire:submit="search" class="flex gap-4 items-center">
