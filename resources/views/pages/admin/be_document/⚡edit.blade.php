@@ -179,6 +179,10 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
             $rec->respect_at = $item['respect_at'];
             $rec->save();
         }
+        session()->flash('notify', [
+            'message' => __('Document updated successfully'),
+            'type' => 'success',
+        ]);
         return $this->redirectIntended(route('admin.be-document.index'), true);
     }
     public function addReciever()

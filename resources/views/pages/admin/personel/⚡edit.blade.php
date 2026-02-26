@@ -35,6 +35,10 @@ new #[Layout('layouts::admin.app'), Title('Personel | Edit Personel')] class ext
     {
         $this->validate();
         $this->personel->save();
+         session()->flash('notify', [
+            'message' => __('Personel updated successfully'),
+            'type' => 'success',
+        ]);
         return $this->redirectIntended(route('admin.personel.index'), true);
     }
 };

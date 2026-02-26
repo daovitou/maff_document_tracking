@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Layout;
 use App\Models\Role;
+use App\Models\Admin;
 use Illuminate\Support\Facades\Gate;
 new #[Layout('layouts::admin.app'), Title('Settings | Role List')] class extends Component {
     //
@@ -41,9 +42,14 @@ new #[Layout('layouts::admin.app'), Title('Settings | Role List')] class extends
 
     public function delete($id, $status)
     {
-        $role = Role::find($id);
-        $role->is_active = !$status;
-        $role->save();
+        $users = Admin::where('role_id', $id);
+        if ($users->count() > 0) {
+            $this->dispatch('notify', message: __('Role cannot delete, beause it is used by some users'), type: 'error');
+        } else {
+            $role = Role::find($id);
+            $role->delete();
+            $this->dispatch('notify', message: __('Role Deleted Successfully'), type: 'success');
+        }
         Flux::modal('delete-' . $id)->close();
     }
     #[Computed]
@@ -66,6 +72,7 @@ new #[Layout('layouts::admin.app'), Title('Settings | Role List')] class extends
         <flux:button variant="primary" icon='plus-circle' href="{{ route('admin.setting.role.create') }}"
             class="cursor-default" wire:navigate>
             {{ __('New Role') }}</flux:button>
+
     </div>
     <table class="min-w-full table mt-6">
         <thead class="">
@@ -84,19 +91,19 @@ new #[Layout('layouts::admin.app'), Title('Settings | Role List')] class extends
                             :sortDirection="$sortDirection" />
                     </span>
                 </th>
-                <th class="text-left" wire:click="doSort('is_active')">
+                {{-- <th class="text-left" wire:click="doSort('is_active')">
                     <span class="flex items-center justify-between">
                         <x-datatable-header displayName="{{ __('Status') }}" field="is_active" :sortField="$sortField"
                             :sortDirection="$sortDirection" />
                     </span>
-                </th>
+                </th> --}}
                 <th>{{ __('Actions') }}</th>
             </tr>
         </thead>
         <tbody>
             @if (count($this->roles) < 1)
                 <tr>
-                    <td colspan="6" class="text-center font-semibold bg-zinc-100">
+                    <td colspan="4" class="text-center font-semibold bg-zinc-100">
                         {{ __('No Role Found') }}
                     </td>
                 </tr>
@@ -106,22 +113,28 @@ new #[Layout('layouts::admin.app'), Title('Settings | Role List')] class extends
                         <th>{{ $loop->index + 1 }}</th>
                         <td>{{ $role->name }}</td>
                         <td>{{ $role->description }}</td>
-                        <td>
+                        {{-- <td>
                             <flux:badge color="{{ $role->is_active ? 'lime' : 'red' }}" size="sm">
                                 {{ $role->is_active ? 'Active' : 'Inactive' }}</flux:badge>
-                        </td>
+                        </td> --}}
                         <td class="flex items-center gap-3">
-                            <a href="{{ route('admin.setting.role.edit', $role->id) }}" class="cursor-default"
-                                wire:navigate>
-                                <x-ri-edit-2-line class="w-6 h-6 text-accent-content" />
-                            </a>
-                            <x-ri-loop-right-line class="w-6 h-6 text-blue-600"
-                                x-on:click="$flux.modal('delete-{{ $role->id }}').show()" />
+                            <flux:tooltip content="{{ __('Edit') }}">
+                                <a href="{{ route('admin.setting.role.edit', $role->id) }}" class="cursor-default"
+                                    wire:navigate>
+                                    <x-ri-edit-2-line class="w-6 h-6 text-accent-content" />
+                                </a>
+                            </flux:tooltip>
+                            <flux:tooltip content="{{ __('Delete') }}">
+                                <x-ri-delete-bin-5-line class="w-6 h-6 text-red-500"
+                                    x-on:click="$flux.modal('delete-{{ $role->id }}').show()" />
+                            </flux:tooltip>
+
                             <flux:modal name="delete-{{ $role->id }}">
                                 <flux:heading class="text-left text-lg font-bold text-amber-500 ">
                                     {{ __('Confirm Status') }}
                                 </flux:heading>
-                                <flux:text class="mt-2 mb-6">Are you sure to switch status on : {{ $role->name }}?
+                                <flux:text class="mt-2 mb-6">{{ __('Are you sure to ') }}{{ __('delete') }} :
+                                    {{ $role->name }}?
                                 </flux:text>
                                 <flux:button variant="danger"
                                     wire:click="delete('{{ $role->id }}','{{ $role->is_active }}')"

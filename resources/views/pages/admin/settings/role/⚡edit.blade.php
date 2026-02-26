@@ -11,8 +11,9 @@ new #[Layout('layouts::admin.app'), Title('Settings | Edit Role')] class extends
     public $role;
     public $permissions;
     public $selectedPermissions;
-    public function __construct() {
-         if (!Auth::guard('admin')->user()->is_system) {
+    public function __construct()
+    {
+        if (!Auth::guard('admin')->user()->is_system) {
             abort(403);
         }
     }
@@ -48,6 +49,11 @@ new #[Layout('layouts::admin.app'), Title('Settings | Edit Role')] class extends
         $this->validate();
         $this->role->permissions = $this->selectedPermissions;
         $this->role->save();
+        // 1. Flash the notification to the session manually
+        session()->flash('notify', [
+            'message' => __('Role updated successfully')
+            'type' => 'success',
+        ]);
         return $this->redirectIntended(route('admin.setting.role.index'), true);
     }
 };
@@ -57,7 +63,7 @@ new #[Layout('layouts::admin.app'), Title('Settings | Edit Role')] class extends
     <flux:heading size="xl" level="1">{{ __('Edit Role') }}</flux:heading>
     {{-- <flux:text class="mb-6 mt-2 text-xl">{{ __('Edit Role') }}</flux:text> --}}
     <flux:separator variant="subtle" class="my-6" />
-     <form wire:submit.prevent="save" enctype="multipart/form-data" class="w-full lg:w-2/3">
+    <form wire:submit.prevent="save" enctype="multipart/form-data" class="w-full lg:w-2/3">
         <flux:field class="mt-4">
             <flux:label>
                 {{ __('Role Name') }}
@@ -179,8 +185,7 @@ new #[Layout('layouts::admin.app'), Title('Settings | Edit Role')] class extends
                         <flux:checkbox wire:model="selectedPermissions" value="edit-personel" class="block mx-auto" />
                     </td>
                     <td>
-                        <flux:checkbox wire:model="selectedPermissions" value="delete-personel"
-                            class="block mx-auto" />
+                        <flux:checkbox wire:model="selectedPermissions" value="delete-personel" class="block mx-auto" />
                     </td>
                 </tr>
 
@@ -247,7 +252,7 @@ new #[Layout('layouts::admin.app'), Title('Settings | Edit Role')] class extends
         class="fixed inset-0 bg-zinc-100/20 bg-opacity-50 backdrop-blur-sm z-50 items-center justify-center">
         <div class="bg-white p-6 rounded-lg shadow-xl flex flex-col items-center">
             <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-lime-600"></div>
-            <p class="mt-4 text-zinc-700 font-semibold animate-pulse">{{__("Processing your request")}}...</p>
+            <p class="mt-4 text-zinc-700 font-semibold animate-pulse">{{ __('Processing your request') }}...</p>
         </div>
     </div>
 </div>

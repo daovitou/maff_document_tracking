@@ -12,7 +12,7 @@ new #[Layout('layouts::admin.app'), Title('Personel | New Personel')] class exte
     public function mount()
     {
         $this->personel = new Personel();
-        $this->personel->order =1;
+        $this->personel->order = 1;
     }
     public function rules()
     {
@@ -36,6 +36,10 @@ new #[Layout('layouts::admin.app'), Title('Personel | New Personel')] class exte
     {
         $this->validate();
         $this->personel->save();
+        session()->flash('notify', [
+            'message' => __('Personel created successfully'),
+            'type' => 'success',
+        ]);
         return $this->redirectIntended(route('admin.personel.index'), true);
     }
 };

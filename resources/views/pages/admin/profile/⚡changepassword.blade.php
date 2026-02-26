@@ -38,6 +38,10 @@ new #[Layout('layouts::admin.app'), Title('Profile | Change Password')] class ex
         } else {
             $this->user->password = Hash::make($this->password);
             $this->user->save();
+            session()->flash('notify', [
+                'message' => __('User password updated successfully'),
+                'type' => 'success',
+            ]);
             return $this->redirectIntended(route('admin.dashboard'), true);
         }
     }
@@ -77,8 +81,8 @@ new #[Layout('layouts::admin.app'), Title('Profile | Change Password')] class ex
                     {{ __('Require') }}
                 </flux:badge>
             </flux:label>
-            <flux:input icon="key" type="password" id="password_confirmation"
-                wire:model="password_confirmation" viewable />
+            <flux:input icon="key" type="password" id="password_confirmation" wire:model="password_confirmation"
+                viewable />
             <flux:error name="password_confirmation" />
         </flux:field>
         <div class="mt-6 float-right flex gap-4 nowrap">
@@ -95,7 +99,7 @@ new #[Layout('layouts::admin.app'), Title('Profile | Change Password')] class ex
         class="fixed inset-0 bg-zinc-100/20 bg-opacity-50 backdrop-blur-sm z-50 items-center justify-center">
         <div class="bg-white p-6 rounded-lg shadow-xl flex flex-col items-center">
             <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-lime-600"></div>
-            <p class="mt-4 text-zinc-700 font-semibold animate-pulse">{{__("Processing your request")}}...</p>
+            <p class="mt-4 text-zinc-700 font-semibold animate-pulse">{{ __('Processing your request') }}...</p>
         </div>
     </div>
 </div>

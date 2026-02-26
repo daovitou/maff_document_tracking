@@ -47,9 +47,15 @@ new #[Layout('layouts::admin.app'), Title('Authentication | User List')] class e
         // if ($user->avatar) {
         //     Storage::disk('public')->delete($user->avatar);
         // }
-        $user->deleted_at = Carbon::today();
+        // $user->deleted_at = Carbon::today();
+        if ($user->status == 'active') {
+            $user->status = 'inactive';
+        } else {
+            $user->status = 'active';
+        }
+        $this->dispatch('notify', message: __('User status updated successfully'), type: 'success');
         $user->save();
-        Flux::modal('delete-' . $id)->close();
+        // Flux::modal('delete-' . $id)->close();
         // session()->flash('message', 'Group deleted successfully.');
         // Toaster::success('User deleted  successfully.');
     }
@@ -93,10 +99,15 @@ new #[Layout('layouts::admin.app'), Title('Authentication | User List')] class e
                             :sortDirection="$sortDirection" />
                     </span>
                 </th>
-               
                 <th class="text-left" wire:click="doSort('email')">
                     <span class="flex items-center justify-between">
                         <x-datatable-header displayName="{{ __('Email') }}" field="email" :sortField="$sortField"
+                            :sortDirection="$sortDirection" />
+                    </span>
+                </th>
+                <th class="text-left" wire:click="doSort('status')">
+                    <span class="flex items-center justify-between">
+                        <x-datatable-header displayName="{{ __('Status') }}" field="status" :sortField="$sortField"
                             :sortDirection="$sortDirection" />
                     </span>
                 </th>
@@ -131,17 +142,48 @@ new #[Layout('layouts::admin.app'), Title('Authentication | User List')] class e
                             </div>
                         </td>
                         <td>{{ $user->role->name }}</td>
-                        
                         <td>{{ $user->email }}</td>
-                        <td>{{ Carbon::parse($user->created_at)->diffForHumans() }}</td>
-                        <td class="flex items-center gap-3">
-                            @if (Gate::forUser(auth('admin')->user())->allows('edit-user'))
-                                <a href="{{ route('admin.user.edit', $user->id) }}" class="cursor-default"
-                                    wire:navigate>
-                                    <x-ri-edit-2-line class="w-6 h-6 text-accent-content" />
-                                </a>
-                            @endif
+                        <td>
+                            {{-- <flux:badge size="sm" color="{{ $user->status == 'active' ? 'lime' : 'red' }}"
+                               wire:click="delete('{{ $user->id }}')">
+                                {{$user->status}}
+                            </flux:badge> --}}
                             @if (Gate::forUser(auth('admin')->user())->allows('delete-user'))
+                                @if ($user->status == 'active')
+                                    <flux:button variant="primary" color="green" size="xs" class="capitalize"
+                                        wire:click="delete('{{ $user->id }}')">
+                                        {{ $user->status }}
+                                    </flux:button>
+                                @else
+                                    <flux:button variant="primary" color="red" size="xs" class="capitalize"
+                                        wire:click="delete('{{ $user->id }}')">
+                                        {{ $user->status }}
+                                    </flux:button>
+                                @endif
+                            @else
+                                @if ($user->status == 'active')
+                                    <flux:button variant="primary" color="green" size="xs" class="capitalize">
+                                        {{ $user->status }}
+                                    </flux:button>
+                                @else
+                                    <flux:button variant="primary" color="red" size="xs" class="capitalize">
+                                        {{ $user->status }}
+                                    </flux:button>
+                                @endif
+                            @endif
+
+                        </td>
+                        <td>{{ Carbon::parse($user->created_at)->diffForHumans() }}</td>
+                        <td class="flex items-center justify-center gap-3">
+                            @if (Gate::forUser(auth('admin')->user())->allows('edit-user'))
+                                <flux:tooltip content="{{ __('Edit') }}">
+                                    <a href="{{ route('admin.user.edit', $user->id) }}" class="cursor-default"
+                                        wire:navigate>
+                                        <x-ri-edit-2-line class="w-6 h-6 text-accent-content" />
+                                    </a>
+                                </flux:tooltip>
+                            @endif
+                            {{-- @if (Gate::forUser(auth('admin')->user())->allows('delete-user'))
                                 <x-ri-delete-bin-5-line class="w-6 h-6 text-danger-content"
                                     x-on:click="$flux.modal('delete-{{ $user->id }}').show()" />
                                 <flux:modal name="delete-{{ $user->id }}">
@@ -156,7 +198,7 @@ new #[Layout('layouts::admin.app'), Title('Authentication | User List')] class e
                                         {{ __('Ok') }}
                                     </flux:button>
                                 </flux:modal>
-                            @endif
+                            @endif --}}
                         </td>
                     </tr>
                 @endforeach

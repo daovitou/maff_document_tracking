@@ -49,6 +49,7 @@ new #[Layout('layouts::admin.app'), Title('Depatments | Department List')] class
         $department->is_active = !$status;
         $department->save();
         Flux::modal('delete-' . $id)->close();
+        $this->dispatch('notify', message: __('Department deleted successfully'), type: 'success');
     }
 };
 ?>
@@ -78,7 +79,7 @@ new #[Layout('layouts::admin.app'), Title('Depatments | Department List')] class
                         <x-datatable-header displayName="{{ __('Department') }}" field="name" :sortField="$sortField"
                             :sortDirection="$sortDirection" />
                     </span>
-                </th>F
+                </th>
                 <th class="text-left" wire:click="doSort('gd_name')">
                     <span class="flex items-center justify-between">
                         <x-datatable-header displayName="{{ __('General Department') }}" field="gd_name"
@@ -118,14 +119,19 @@ new #[Layout('layouts::admin.app'), Title('Depatments | Department List')] class
                         <td>{{ $department->phone }}</td>
                         <td class="flex items-center gap-3">
                             @if (Gate::forUser(auth('admin')->user())->allows('edit-department'))
-                                <a href="{{ route('admin.department.edit', $department->id) }}" class="cursor-default"
-                                    wire:navigate>
-                                    <x-ri-edit-2-line class="w-6 h-6 text-accent-content" />
-                                </a>
+                                <flux:tooltip content="{{ __('Edit') }}">
+                                    <a href="{{ route('admin.department.edit', $department->id) }}"
+                                        class="cursor-default" wire:navigate>
+                                        <x-ri-edit-2-line class="w-6 h-6 text-accent-content" />
+                                    </a>
+                                </flux:tooltip>
                             @endif
                             @if (Gate::forUser(auth('admin')->user())->allows('delete-department'))
-                                <x-ri-delete-bin-5-line class="w-6 h-6 text-red-500"
-                                    x-on:click="$flux.modal('delete-{{ $department->id }}').show()" />
+                                <flux:tooltip content="{{ __('Delete') }}">
+                                    <x-ri-delete-bin-5-line class="w-6 h-6 text-red-500"
+                                        x-on:click="$flux.modal('delete-{{ $department->id }}').show()" />
+                                </flux:tooltip>
+
                                 <flux:modal name="delete-{{ $department->id }}">
                                     <flux:heading class="text-left text-lg font-bold text-red-500 ">
                                         {{ __('Confirm') }}

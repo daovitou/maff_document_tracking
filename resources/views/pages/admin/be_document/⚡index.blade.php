@@ -57,6 +57,8 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
         $rec->save();
         Flux::modal('return-{{ $id }}')->close();
         $this->clearReturn();
+        $this->dispatch('notify', message: __('Document returned successfully'), type: 'success');
+
     }
     public function updatedSearch()
     {
@@ -101,6 +103,8 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
             $be_document->delete();
         }
         Flux::modal('delete-' . $id)->close();
+        $this->dispatch('notify', message: __('Document deleted successfully'), type: 'success');
+
     }
     public $expandedRows = [];
 
@@ -193,8 +197,16 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
                                         <tbody>
                                             @foreach ($items as $item)
                                                 <tr class="border-t border-zinc-200 dark:border-white/10">
-                                                    <td class="py-2">
-                                                        {{ $item->to_gd ? $item->department_name : $item->personel_name }}
+                                                     <td class="py-2">
+                                                        @if ($item->to_gd)
+                                                            @if ($item->department_name)
+                                                                {{ $item->department_name }} ({{ $item->gd_name }})
+                                                            @else
+                                                                {{ $item->gd_name }}
+                                                            @endif
+                                                        @else
+                                                            {{ $item->personel_name }}
+                                                        @endif
                                                     </td>
                                                     <td>
                                                         @if ($item->status == 'បានបោះបង់')

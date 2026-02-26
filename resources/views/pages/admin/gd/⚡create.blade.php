@@ -47,6 +47,10 @@ new #[Layout('layouts::admin.app'), Title('Departments | New Department')] class
     {
         $this->validate();
         $this->gd->save();
+        session()->flash('notify', [
+            'message' => __('General Department created successfully'),
+            'type' => 'success',
+        ]);
         return $this->redirectIntended(route('admin.gd.index'), true);
     }
 };

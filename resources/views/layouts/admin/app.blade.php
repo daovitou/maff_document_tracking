@@ -37,6 +37,7 @@
             </p>
         </div>
     </div> --}}
+    <livewire:toast />
     <div x-data="{ loading: false }" x-show="loading" @loading.window="loading = $event.detail.loading"
         class="fixed flex inset-0 bg-zinc-100/20 bg-opacity-50 backdrop-blur-sm z-50 items-center justify-center">
         <div class="bg-white p-6 rounded-lg shadow-xl flex flex-col items-center">
@@ -60,6 +61,12 @@
         //     }));
         //     console.log(event.detail.loading)
         // });
+        window.dispatchEvent(new CustomEvent('toast', {
+            detail: {
+                message: 'Connection lost!',
+                type: 'error'
+            }
+        }));
         document.addEventListener('livewire:navigate', () => {
             window.dispatchEvent(new CustomEvent('loading', {
                 detail: {

@@ -55,6 +55,10 @@ new #[Layout('layouts::admin.app'), Title('Profile | Information')] class extend
             $this->user->avatar = $this->avatar->store('profiles', 'public');
         }
         $this->user->save();
+        session()->flash('notify', [
+            'message' => __('User info updated successfully'),
+            'type' => 'success',
+        ]);
         return $this->redirectIntended(route('admin.dashboard'), true);
     }
 };
@@ -131,7 +135,7 @@ new #[Layout('layouts::admin.app'), Title('Profile | Information')] class extend
         class="fixed inset-0 bg-zinc-100/20 bg-opacity-50 backdrop-blur-sm z-50 items-center justify-center">
         <div class="bg-white p-6 rounded-lg shadow-xl flex flex-col items-center">
             <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-lime-600"></div>
-            <p class="mt-4 text-zinc-700 font-semibold animate-pulse">{{__("Processing your request")}}...</p>
+            <p class="mt-4 text-zinc-700 font-semibold animate-pulse">{{ __('Processing your request') }}...</p>
         </div>
     </div>
 </div>

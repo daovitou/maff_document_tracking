@@ -52,6 +52,11 @@ new #[Layout('layouts::admin.app'), Title('Settings | New Role')] class extends 
         $this->validate();
         $this->role->permissions = $this->selectedPermissions;
         $this->role->save();
+        // 1. Flash the notification to the session manually
+        session()->flash('notify', [
+            'message' => __('Role created successfully'),
+            'type' => 'success',
+        ]);
         return $this->redirectIntended(route('admin.setting.role.index'), true);
     }
     #[Computed]
@@ -196,8 +201,7 @@ new #[Layout('layouts::admin.app'), Title('Settings | New Role')] class extends 
                         <flux:checkbox wire:model="selectedPermissions" value="edit-personel" class="block mx-auto" />
                     </td>
                     <td>
-                        <flux:checkbox wire:model="selectedPermissions" value="delete-personel"
-                            class="block mx-auto" />
+                        <flux:checkbox wire:model="selectedPermissions" value="delete-personel" class="block mx-auto" />
                     </td>
                 </tr>
 
@@ -273,9 +277,11 @@ new #[Layout('layouts::admin.app'), Title('Settings | New Role')] class extends 
                 class="cursor-default" wire:navigate>
                 {{ __('Cancel') }}
             </flux:button>
+
             <flux:button type="submit" variant="primary" icon="check-circle" class="cursor-default">
                 {{ __('Save') }}
             </flux:button>
+
         </div>
     </form>
     <div wire:loading.flex wire:target="save"

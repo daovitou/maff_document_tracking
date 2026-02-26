@@ -37,7 +37,7 @@
                          :current="request()->routeIs('admin.be-document.index')" wire:navigate>
                          {{ __('Document List') }}
                      </flux:sidebar.item>
-                      <flux:sidebar.item href="{{ route('admin.be-document.followup') }}"
+                     <flux:sidebar.item href="{{ route('admin.be-document.followup') }}"
                          :current="request()->routeIs('admin.be-document.followup')" wire:navigate>
                          {{ __('Follow Up Document List') }}
                      </flux:sidebar.item>
@@ -50,21 +50,7 @@
                  @endif
              </flux:sidebar.group>
          @endif
-         @if (Gate::forUser(auth('admin')->user())->allows('view-user'))
-             <flux:sidebar.group expandable :expanded="request()->routeIs('admin.user.*')" icon="shield-check"
-                 heading="{{ __('Authentication') }}" class="grid">
-                 @if (Gate::forUser(auth('admin')->user())->allows('view-user'))
-                     <flux:sidebar.item href="{{ route('admin.user.index') }}"
-                         :current="request()->routeIs('admin.user.index')" wire:navigate>{{ __('User List') }}
-                     </flux:sidebar.item>
-                 @endif
-                 @if (Gate::forUser(auth('admin')->user())->allows('create-user'))
-                     <flux:sidebar.item href="{{ route('admin.user.create') }}"
-                         :current="request()->routeIs('admin.user.create')" wire:navigate>{{ __('New User') }}
-                     </flux:sidebar.item>
-                 @endif
-             </flux:sidebar.group>
-         @endif
+
          @if (Gate::forUser(auth('admin')->user())->allows('view-department'))
              <flux:sidebar.group expandable :expanded="request()->routeIs('admin.department.*')" icon="building-office"
                  heading="{{ __('Department') }}" class="grid">
@@ -112,6 +98,21 @@
                      <flux:sidebar.item href="{{ route('admin.personel.create') }}"
                          :current="request()->routeIs('admin.personel.create')" wire:navigate>
                          {{ __('New Personel') }}
+                     </flux:sidebar.item>
+                 @endif
+             </flux:sidebar.group>
+         @endif
+         @if (Gate::forUser(auth('admin')->user())->allows('view-user'))
+             <flux:sidebar.group expandable :expanded="request()->routeIs('admin.user.*')" icon="shield-check"
+                 heading="{{ __('Authentication') }}" class="grid">
+                 @if (Gate::forUser(auth('admin')->user())->allows('view-user'))
+                     <flux:sidebar.item href="{{ route('admin.user.index') }}"
+                         :current="request()->routeIs('admin.user.index')" wire:navigate>{{ __('User List') }}
+                     </flux:sidebar.item>
+                 @endif
+                 @if (Gate::forUser(auth('admin')->user())->allows('create-user'))
+                     <flux:sidebar.item href="{{ route('admin.user.create') }}"
+                         :current="request()->routeIs('admin.user.create')" wire:navigate>{{ __('New User') }}
                      </flux:sidebar.item>
                  @endif
              </flux:sidebar.group>

@@ -86,6 +86,10 @@ new #[Layout('layouts::admin.app'), Title('Create User')] class extends Componen
         }
         $this->user->password = Hash::make($this->user->password);
         $this->user->save();
+        session()->flash('notify', [
+            'message' => __('User created successfully'),
+            'type' => 'success',
+        ]);
         return $this->redirectIntended(route('admin.user.index'), true);
     }
 };

@@ -60,6 +60,10 @@ new #[Layout('layouts::admin.app'), Title('Authentication | Edit User')] class e
     {
         $this->validate();
         $this->user->save();
+         session()->flash('notify', [
+            'message' => __('User updated successfully'),
+            'type' => 'success',
+        ]);
         return $this->redirectIntended(route('admin.user.index'), true);
     }
 };

@@ -17,7 +17,7 @@ new class extends Component {
 
     public function authenticate()
     {
-        if (Auth::guard('admin')->attempt(['username' => $this->username, 'password' => $this->password, 'deleted_at' => null])) {
+        if (Auth::guard('admin')->attempt(['username' => $this->username, 'password' => $this->password, 'status' => 'active', 'deleted_at' => null])) {
             return $this->redirectIntended(route('admin.dashboard'), true);
         }
         // $this->addError('auth', 'Invalid credentials.');
@@ -30,8 +30,10 @@ new class extends Component {
 <div class="flex flex-col items-center justify-center min-h-screen bg-zinc-50 dark:bg-zinc-900 px-6">
     <div class="w-full max-w-sm space-y-6">
         <div class="text-center">
-            <flux:heading size="xl" level="1">{{ __('Welcome back') }}</flux:heading>
-            <flux:subheading>Enter your credentials to access your account</flux:subheading>
+            {{-- <flux:heading size="xl" level="1">{{ __('Welcome back') }}</flux:heading>
+            <flux:subheading>Enter your credentials to access your account</flux:subheading> --}}
+            <img src="{{ asset('assets/img/logo.png') }}" alt="logo" srcset=""
+                style="width: 196px; height: 196px; margin: 0 auto; ">
         </div>
 
         <x-card>
@@ -40,8 +42,8 @@ new class extends Component {
                     placeholder="{{ __('Username') }}" autofocus />
 
                 <div class="space-y-2">
-                    <flux:input icon="key" type="password" wire:model="password" viewable 
-                        placeholder="••••••••" />
+                    <flux:input icon="key" type="password" label="{{ __('Password') }}" wire:model="password"
+                        viewable placeholder="••••••••" />
                     {{-- <div class="flex justify-end">
                         <flux:link href="/forgot-password" variant="subtle" class="text-sm">
                             {{__("Forgot password")}}?
@@ -60,7 +62,7 @@ new class extends Component {
         class="fixed inset-0 bg-zinc-100/20 bg-opacity-50 backdrop-blur-sm z-50 items-center justify-center">
         <div class="bg-white p-6 rounded-lg shadow-xl flex flex-col items-center">
             <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-lime-600"></div>
-            <p class="mt-4 text-zinc-700 font-semibold animate-pulse">{{__("Processing your request")}}...</p>
+            <p class="mt-4 text-zinc-700 font-semibold animate-pulse">{{ __('Processing your request') }}...</p>
         </div>
     </div>
 </div>

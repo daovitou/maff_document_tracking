@@ -45,8 +45,11 @@ new #[Layout('layouts::admin.app'), Title('Departments | Edit Department')] clas
     public function save()
     {
         $this->validate();
-        $this->validate();
         $this->gd->save();
+           session()->flash('notify', [
+            'message' => __('General Department updated successfully'),
+            'type' => 'success',
+        ]);
         return $this->redirectIntended(route('admin.gd.index'), true);
     }
 };

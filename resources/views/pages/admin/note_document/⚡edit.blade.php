@@ -177,6 +177,10 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
             $rec->send_at = $item['send_at'];
             $rec->save();
         }
+        session()->flash('notify', [
+            'message' => __('Document updated successfully'),
+            'type' => 'success',
+        ]);
         return $this->redirectIntended(route('admin.note-document.index'), true);
     }
     public function addReciever()

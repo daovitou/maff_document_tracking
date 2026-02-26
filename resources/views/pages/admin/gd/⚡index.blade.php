@@ -33,8 +33,9 @@ new #[Layout('layouts::admin.app'), Title('Depatments | Department List')] class
         $gd->is_active = !$status;
         $gd->save();
         Flux::modal('delete-' . $id)->close();
+        $this->dispatch('notify', message: __('General Department deleted successfully'), type: 'success');
     }
-     public function updatedSearch()
+    public function updatedSearch()
     {
         $this->resetPage();
     }
@@ -91,12 +92,12 @@ new #[Layout('layouts::admin.app'), Title('Depatments | Department List')] class
                             :sortDirection="$sortDirection" />
                     </span>
                 </th>
-                <th class="text-left" wire:click="doSort('is_active')">
+                {{-- <th class="text-left" wire:click="doSort('is_active')">
                     <span class="flex items-center justify-between">
                         <x-datatable-header displayName="{{ __('Status') }}" field="is_active" :sortField="$sortField"
                             :sortDirection="$sortDirection" />
                     </span>
-                </th>
+                </th> --}}
                 <th class="text-left" wire:click="doSort('created_at')">
                     <span class="flex items-center justify-between">
                         <x-datatable-header displayName="{{ __('Created At') }}" field="created_at" :sortField="$sortField"
@@ -110,7 +111,7 @@ new #[Layout('layouts::admin.app'), Title('Depatments | Department List')] class
         <tbody>
             @if (count($this->gds) < 1)
                 <tr>
-                    <td colspan="7" class="text-center font-semibold bg-zinc-100">
+                    <td colspan="6" class="text-center font-semibold bg-zinc-100">
                         {{ __('No General Department Found') }}
                     </td>
                 </tr>
@@ -121,25 +122,32 @@ new #[Layout('layouts::admin.app'), Title('Depatments | Department List')] class
                         <td>{{ $gd->name }}</td>
                         <td>{{ $gd->description }}</td>
                         <td>{{ $gd->phone }}</td>
-                        <td>
+                        {{-- <td>
                             <flux:badge color="{{ $gd->is_active ? 'lime' : 'red' }}" size="sm">
                                 {{ $gd->is_active ? 'Active' : 'Inactive' }}</flux:badge>
-                        </td>
+                        </td> --}}
                         <td>{{ Carbon::parse($gd->created_at)->diffForHumans() }}</td>
                         <td class="flex items-center gap-3">
                             @if (Gate::forUser(auth('admin')->user())->allows('edit-general-department'))
-                                <a href="{{ route('admin.gd.edit', $gd->id) }}" class="cursor-default" wire:navigate>
-                                    <x-ri-edit-2-line class="w-6 h-6 text-accent-content" />
-                                </a>
+                                <flux:tooltip content="{{ __('Edit') }}">
+                                    <a href="{{ route('admin.gd.edit', $gd->id) }}" class="cursor-default"
+                                        wire:navigate>
+                                        <x-ri-edit-2-line class="w-6 h-6 text-accent-content" />
+                                    </a>
+                                </flux:tooltip>
                             @endif
                             @if (Gate::forUser(auth('admin')->user())->allows('delete-general-department'))
-                                <x-ri-delete-bin-5-line class="w-6 h-6 text-red-500"
-                                    x-on:click="$flux.modal('delete-{{ $gd->id }}').show()" />
+                                <flux:tooltip content="{{ __('Edit') }}">
+                                    <x-ri-delete-bin-5-line class="w-6 h-6 text-red-500"
+                                        x-on:click="$flux.modal('delete-{{ $gd->id }}').show()" />
+                                </flux:tooltip>
+
                                 <flux:modal name="delete-{{ $gd->id }}">
                                     <flux:heading class="text-left text-lg font-bold text-red-500 ">
                                         {{ __('Confirm') }}
                                     </flux:heading>
-                                    <flux:text class="mt-2 mb-6">{{__("Are you sure to ")}}{{__('delete')}} : {{ $gd->name }}?
+                                    <flux:text class="mt-2 mb-6">{{ __('Are you sure to ') }}{{ __('delete') }} :
+                                        {{ $gd->name }}?
                                     </flux:text>
                                     <flux:button variant="danger"
                                         wire:click="delete('{{ $gd->id }}','{{ $gd->is_active }}')"

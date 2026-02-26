@@ -49,6 +49,7 @@ new #[Layout('layouts::admin.app'), Title('Authentication | User List')] class e
         // }
         $user->deleted_at = Carbon::today();
         $user->save();
+        $this->dispatch('notify', message: 'Role cannot delete, beause it is used by some users', type: 'error');
         Flux::modal('delete-' . $id)->close();
         // session()->flash('message', 'Group deleted successfully.');
         // Toaster::success('User deleted  successfully.');

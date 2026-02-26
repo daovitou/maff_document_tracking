@@ -31,7 +31,7 @@ new #[Layout('layouts::admin.app'), Title('Departments | Edit Department')] clas
         return [
             'department.name' => [
                 'required',
-                'min:3'
+                'min:3',
                 // function ($attribute, $value, $fail) {
                 //     $exists = Department::whereRaw('LOWER(name) = ? AND is_active = ? AND id != ?', [strtolower($value), true, $this->department->id])->exists();
                 //     if ($exists) {
@@ -56,6 +56,10 @@ new #[Layout('layouts::admin.app'), Title('Departments | Edit Department')] clas
     {
         $this->validate();
         $this->department->save();
+        session()->flash('notify', [
+            'message' => __('Department updated successfully'),
+            'type' => 'success',
+        ]);
         return $this->redirectIntended(route('admin.department.index'), true);
     }
 };
@@ -132,7 +136,7 @@ new #[Layout('layouts::admin.app'), Title('Departments | Edit Department')] clas
         class="fixed inset-0 bg-zinc-100/20 bg-opacity-50 backdrop-blur-sm z-50 items-center justify-center">
         <div class="bg-white p-6 rounded-lg shadow-xl flex flex-col items-center">
             <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-lime-600"></div>
-            <p class="mt-4 text-zinc-700 font-semibold animate-pulse">{{__("Processing your request")}}...</p>
+            <p class="mt-4 text-zinc-700 font-semibold animate-pulse">{{ __('Processing your request') }}...</p>
         </div>
     </div>
 </div>

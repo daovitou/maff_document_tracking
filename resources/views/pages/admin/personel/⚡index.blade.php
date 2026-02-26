@@ -18,7 +18,7 @@ new #[Layout('layouts::admin.app'), Title('Personel | Personel List')] class ext
     public $sortDirection = 'ASC';
     public $sortField = 'order';
     public $cancel_note = '';
-     public function updatedSearch()
+    public function updatedSearch()
     {
         $this->resetPage();
     }
@@ -40,10 +40,12 @@ new #[Layout('layouts::admin.app'), Title('Personel | Personel List')] class ext
     {
         return Personel::search($this->search)->orderBy($this->sortField, $this->sortDirection)->paginate($this->perPage);
     }
-    public function delete($id) {
+    public function delete($id)
+    {
         $personel = Personel::find($id);
         $personel->deleted_at = Carbon::today();
         $personel->save();
+        $this->dispatch('notify', message: __('Personel deleted successfully'), type: 'success');
         Flux::modal('delete-' . $id)->close();
     }
 };
@@ -69,8 +71,7 @@ new #[Layout('layouts::admin.app'), Title('Personel | Personel List')] class ext
             <tr>
                 <th class="text-left" wire:click="doSort('order')">
                     <span class="flex items-center justify-between">
-                        <x-datatable-header displayName="Nº" field="order" :sortField="$sortField"
-                            :sortDirection="$sortDirection" />
+                        <x-datatable-header displayName="Nº" field="order" :sortField="$sortField" :sortDirection="$sortDirection" />
                     </span>
                 </th>
                 <th class="text-left" wire:click="doSort('name')">
@@ -120,13 +121,18 @@ new #[Layout('layouts::admin.app'), Title('Personel | Personel List')] class ext
                         <td>{{ $personel->phone }}</td>
                         <td class="flex items-center gap-3">
                             @if (Gate::forUser(auth('admin')->user())->allows('edit-general-department'))
-                                <a href="{{ route('admin.personel.edit', $personel->id) }}" class="cursor-default" wire:navigate>
-                                    <x-ri-edit-2-line class="w-6 h-6 text-accent-content" />
-                                </a>
+                                <flux:tooltip content="{{ __('Edit') }}">
+                                    <a href="{{ route('admin.personel.edit', $personel->id) }}" class="cursor-default"
+                                        wire:navigate>
+                                        <x-ri-edit-2-line class="w-6 h-6 text-accent-content" />
+                                    </a>
+                                </flux:tooltip>
                             @endif
                             @if (Gate::forUser(auth('admin')->user())->allows('delete-general-department'))
-                                <x-ri-delete-bin-5-line class="w-6 h-6 text-red-500"
-                                     x-on:click="$flux.modal('delete-{{ $personel->id }}').show()" />
+                                <flux:tooltip content="{{ __('Delete') }}">
+                                    <x-ri-delete-bin-5-line class="w-6 h-6 text-red-500"
+                                        x-on:click="$flux.modal('delete-{{ $personel->id }}').show()" />
+                                </flux:tooltip>
                                 <flux:modal name="delete-{{ $personel->id }}">
                                     <flux:heading class="text-left text-lg font-bold text-red-500 ">
                                         {{ __('Confirm') }}
@@ -134,8 +140,7 @@ new #[Layout('layouts::admin.app'), Title('Personel | Personel List')] class ext
                                     <flux:text class="mt-2 mb-6">{{ __('Are you sure to ') }}{{ __('delete') }} :
                                         {{ $personel->name }}?
                                     </flux:text>
-                                    <flux:button variant="danger"
-                                        wire:click="delete('{{ $personel->id }}')"
+                                    <flux:button variant="danger" wire:click="delete('{{ $personel->id }}')"
                                         class="float-end">
                                         {{ __('Ok') }}
                                     </flux:button>
