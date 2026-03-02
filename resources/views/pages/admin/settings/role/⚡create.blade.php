@@ -52,7 +52,6 @@ new #[Layout('layouts::admin.app'), Title('Settings | New Role')] class extends 
         $this->validate();
         $this->role->permissions = $this->selectedPermissions;
         $this->role->save();
-        // 1. Flash the notification to the session manually
         session()->flash('notify', [
             'message' => __('Role created successfully'),
             'type' => 'success',

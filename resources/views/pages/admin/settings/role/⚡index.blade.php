@@ -124,24 +124,27 @@ new #[Layout('layouts::admin.app'), Title('Settings | Role List')] class extends
                                     <x-ri-edit-2-line class="w-6 h-6 text-accent-content" />
                                 </a>
                             </flux:tooltip>
-                            <flux:tooltip content="{{ __('Delete') }}">
-                                <x-ri-delete-bin-5-line class="w-6 h-6 text-red-500"
-                                    x-on:click="$flux.modal('delete-{{ $role->id }}').show()" />
-                            </flux:tooltip>
+                            @if (count($role->users) < 1)
+                                <flux:tooltip content="{{ __('Delete') }}">
+                                    <x-ri-delete-bin-5-line class="w-6 h-6 text-red-500"
+                                        x-on:click="$flux.modal('delete-{{ $role->id }}').show()" />
+                                </flux:tooltip>
 
-                            <flux:modal name="delete-{{ $role->id }}">
-                                <flux:heading class="text-left text-lg font-bold text-amber-500 ">
-                                    {{ __('Confirm Status') }}
-                                </flux:heading>
-                                <flux:text class="mt-2 mb-6">{{ __('Are you sure to ') }}{{ __('delete') }} :
-                                    {{ $role->name }}?
-                                </flux:text>
-                                <flux:button variant="danger"
-                                    wire:click="delete('{{ $role->id }}','{{ $role->is_active }}')"
-                                    class="float-end">
-                                    {{ __('Confirm') }}
-                                </flux:button>
-                            </flux:modal>
+                                <flux:modal name="delete-{{ $role->id }}">
+                                    <flux:heading class="text-left text-lg font-bold text-amber-500 ">
+                                        {{ __('Confirm Status') }}
+                                    </flux:heading>
+                                    <flux:text class="mt-2 mb-6">{{ __('Are you sure to ') }}{{ __('delete') }} :
+                                        {{ $role->name }}?
+                                    </flux:text>
+                                    <flux:button variant="danger"
+                                        wire:click="delete('{{ $role->id }}','{{ $role->is_active }}')"
+                                        class="float-end">
+                                        {{ __('Confirm') }}
+                                    </flux:button>
+                                </flux:modal>
+                            @endif
+
                         </td>
                     </tr>
                 @endforeach

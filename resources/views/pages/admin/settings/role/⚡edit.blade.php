@@ -49,9 +49,8 @@ new #[Layout('layouts::admin.app'), Title('Settings | Edit Role')] class extends
         $this->validate();
         $this->role->permissions = $this->selectedPermissions;
         $this->role->save();
-        // 1. Flash the notification to the session manually
         session()->flash('notify', [
-            'message' => __('Role updated successfully')
+            'message' => __('Role updated successfully'),
             'type' => 'success',
         ]);
         return $this->redirectIntended(route('admin.setting.role.index'), true);

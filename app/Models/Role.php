@@ -16,7 +16,7 @@ class Role extends Model
     ];
     public function users()
     {
-        return $this->hasMany(Admin::class, "id", "role_id");
+        return $this->hasMany(Admin::class, "role_id", "id");
     }
     public function gd()
     {
