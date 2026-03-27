@@ -27,36 +27,30 @@ new class extends Component {
 };
 ?>
 
-<div class="flex flex-col items-center justify-center min-h-screen bg-zinc-50 dark:bg-zinc-900 px-6">
-    <div class="w-full max-w-sm space-y-6">
-        <div class="text-center">
-            {{-- <flux:heading size="xl" level="1">{{ __('Welcome back') }}</flux:heading>
-            <flux:subheading>Enter your credentials to access your account</flux:subheading> --}}
-            <img src="{{ asset('assets/img/logo.png') }}" alt="logo" srcset=""
-                style="width: 196px; height: 196px; margin: 0 auto; ">
-        </div>
+<div class="flex flex-col items-center min-h-screen bg-zinc-100 dark:bg-zinc-900 px-6">
+    <div class="p-12 flex items-center mt-36 gap-12 bg-white rounded-2xl shadow-md">
 
-        <x-card>
-            <form wire:submit="authenticate" class="space-y-6">
-                <flux:input icon="user-circle" wire:model="username" label="{{ __('Username') }}" type="text"
-                    placeholder="{{ __('Username') }}" autofocus />
+        <img src="{{ asset('assets/img/logo.png') }}" alt="logo" srcset=""
+            style="width: 196px; height: 196px; margin: 0 auto; ">
+        <form wire:submit="authenticate" class="w-80">
+            <flux:input icon="user-circle" wire:model="username" label="{{ __('Username') }}" type="text"
+                placeholder="{{ __('Username') }}" autofocus />
 
-                <div class="space-y-2">
-                    <flux:input icon="key" type="password" label="{{ __('Password') }}" wire:model="password"
-                        viewable placeholder="••••••••" />
-                    {{-- <div class="flex justify-end">
+            <div class="space-y-2 mt-4">
+                <flux:input icon="key" type="password" label="{{ __('Password') }}" wire:model="password" viewable
+                    placeholder="••••••••" />
+                {{-- <div class="flex justify-end">
                         <flux:link href="/forgot-password" variant="subtle" class="text-sm">
                             {{__("Forgot password")}}?
                         </flux:link>
                     </div> --}}
-                </div>
-                <flux:text class="text-rose-500">{{ $error }}</flux:text>
+            </div>
+            <flux:text class="text-rose-500">{{ $error }}</flux:text>
 
-                <flux:button type="submit" variant="primary" class="w-full">
-                    {{ __('Sign In') }}
-                </flux:button>
-            </form>
-        </x-card>
+            <flux:button type="submit" variant="primary" class="w-full mt-8">
+                {{ __('Sign In') }}
+            </flux:button>
+        </form>
     </div>
     <div wire:loading.flex wire:target="authenticate"
         class="fixed inset-0 bg-zinc-100/20 bg-opacity-50 backdrop-blur-sm z-50 items-center justify-center">
