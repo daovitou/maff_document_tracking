@@ -79,6 +79,7 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
     #[Computed]
     public function docs()
     {
+        $fiveDaysAgo = Carbon::now()->addDays(5);
         return BeDocument::search($this->search)
             ->where('status', 'កំពុងរងចាំ')
             ->where('respect_at', '<=', Carbon::now())
@@ -121,6 +122,7 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
 ?>
 
 <div>
+
     <flux:heading size="xl" level="1">{{ __('Follow Up BE Document List') }}</flux:heading>
     {{-- <flux:text class="mb-6 mt-2 text-xl">{{ __('Document List') }}</flux:text> --}}
     <flux:separator variant="subtle" class="my-6" />

@@ -395,7 +395,7 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
                             </flux:field>
                             <flux:field class="mt-4">
                                 <flux:label>
-                                    {{ __('Send At') }}
+                                    {{ __('Respect At') }}
                                 </flux:label>
                                 <flux:input type="date" max="2999-12-31" wire:model="reciever.respect_at" />
                             </flux:field>
