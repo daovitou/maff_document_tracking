@@ -100,7 +100,7 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
             ],
         ];
         $this->tos = [];
-        $this->article_at = Carbon::now()->format('Y-m-d');
+        $this->article_at = Carbon::parse($this->document->article_at)->format('Y-m-d');
         $qpersonels = Personel::where('deleted_at', null)->orderBy('name', 'asc')->get();
         $this->personels = $qpersonels->map(function ($item) {
             return [
@@ -337,10 +337,10 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
                             @endif
                         </td>
                         <td>
-                            {{ Carbon::parse($to->send_at)->format('d-m-Y') }}
+                            {{ Carbon::parse($to->send_at)->format('d/m/Y') }}
                         </td>
                         <td>
-                            {{ Carbon::parse($to->respect_at)->format('d-m-Y') }}
+                            {{ Carbon::parse($to->respect_at)->format('d/m/Y') }}
                         </td>
                         <td>
 
@@ -367,10 +367,10 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
                             @endif
                         </td>
                         <td>
-                            {{ Carbon::parse($to['send_at'])->format('Y-m-d') }}
+                            {{ Carbon::parse($to['send_at'])->format('d/m/Y') }}
                         </td>
                         <td>
-                            {{ Carbon::parse($to['respect_at'])->format('Y-m-d') }}
+                            {{ Carbon::parse($to['respect_at'])->format('d/m/Y') }}
                         </td>
                         <td>
                             <flux:button variant="danger" icon="x-circle" size="sm"

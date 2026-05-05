@@ -168,7 +168,7 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
                             {{ $first->code }}
                         </th>
                         <td>{{ $first->article }}</td>
-                        <td>{{ Carbon::parse($first->article_at)->format('Y-m-d') }}</td>
+                        <td>{{ Carbon::parse($first->article_at)->format('d/m/Y') }}</td>
                         <td>{{ $first->source }}</td>
                         <td>
                             <flux:tooltip content="{{ __('Edit') }}">
@@ -223,7 +223,7 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
                                                             </flux:badge>
                                                         @endif
                                                     </td>
-                                                    <td>{{ Carbon::parse($item->send_at)->format('Y-m-d') }}</td>
+                                                    <td>{{ Carbon::parse($item->send_at)->format('d/m/Y') }}</td>
                                                     <td class="flex items-center gap-3">
                                                         @if (Gate::forUser(auth('admin')->user())->allows('view-note-document'))
                                                             <flux:tooltip content="{{ __('View') }}">

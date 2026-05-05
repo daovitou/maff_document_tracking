@@ -61,6 +61,12 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
                     )</td>
             </tr>
             <tr class="border-b border-zinc-200">
+                <th class="text-right">{{ __('Document Note') }} :</th>
+                <td>
+                    {{ $this->reciever->document->note }}
+                </td>
+            </tr>
+            <tr class="border-b border-zinc-200">
                 <th class="text-right">{{ __('Documentation File') }} :</th>
                 <td>
                     {{-- <a href="{{$this->doc->pdfUrl}}" target="_blank" rel="noopener noreferrer">view pdf</a> --}}
@@ -125,6 +131,10 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
                 <tr class="border-b border-zinc-200">
                     <th class="text-right">{{ __('Returned At') }} :</th>
                     <td>{{ Carbon::parse($this->reciever->return_at)->format('d/m/Y') }} ( {{ __('dmY') }})</td>
+                </tr>
+                <tr class="border-b border-zinc-200">
+                    <th class="text-right">{{ __('Document Note') }} :</th>
+                    <td>{{ $this->reciever->return_note }}</td>
                 </tr>
                 <tr class="border-b border-zinc-200">
                     <th class="text-right">{{ __('Documentation File') }} :</th>
