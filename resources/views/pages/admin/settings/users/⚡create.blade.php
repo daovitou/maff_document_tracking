@@ -22,7 +22,7 @@ new #[Layout('layouts::admin.app'), Title('Create User')] class extends Componen
     public $roles;
     public function __construct()
     {
-         if (!Auth::guard('admin')->user()->is_system) {
+        if (!Auth::guard('admin')->user()->is_system) {
             abort(403);
         }
     }
@@ -88,6 +88,7 @@ new #[Layout('layouts::admin.app'), Title('Create User')] class extends Componen
             $this->user->avatar = $this->avatar->store('profiles', 'public');
         }
         $this->user->password = Hash::make($this->user->password);
+        $this->user->created_by = Auth::guard('admin')->user()->id;
         $this->user->save();
         return $this->redirectIntended(route('admin.setting.users.index'), true);
     }
@@ -211,8 +212,8 @@ new #[Layout('layouts::admin.app'), Title('Create User')] class extends Componen
                     placeholder="{{ __('Select general department') }}..." :options="$this->gds" />
                 <flux:error name="user.gd_id" />
             </flux:field>
-            {{$this->user->gd_id}}
-            <flux:field class="mt-4" wire:key="department-{{$this->user->gd_id}}">
+            {{ $this->user->gd_id }}
+            <flux:field class="mt-4" wire:key="department-{{ $this->user->gd_id }}">
                 <flux:label>
                     {{ __('Department') }}
                     <flux:badge size="xs" class="ml-1">
@@ -222,7 +223,7 @@ new #[Layout('layouts::admin.app'), Title('Create User')] class extends Componen
                 <x-searchable-select wire:model="user.department_id" icon="building-office"
                     placeholder="{{ __('Select department') }}..." :options="$this->departments" />
             </flux:field>
-            <flux:field >
+            <flux:field>
                 <flux:label>
                     {{ __('Role') }}
                     <flux:badge size="xs" color="red" class="ml-1">

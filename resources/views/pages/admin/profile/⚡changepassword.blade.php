@@ -37,6 +37,7 @@ new #[Layout('layouts::admin.app'), Title('Profile | Change Password')] class ex
             return;
         } else {
             $this->user->password = Hash::make($this->password);
+            $this->user->updated_by = Auth::guard('admin')->user()->id;
             $this->user->save();
             session()->flash('notify', [
                 'message' => __('User password updated successfully'),

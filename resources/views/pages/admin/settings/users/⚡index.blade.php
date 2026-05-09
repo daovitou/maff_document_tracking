@@ -104,13 +104,18 @@ new #[Layout('layouts::admin.app'), Title('Authentication | User List')] class e
                             :sortDirection="$sortDirection" />
                     </span>
                 </th>
-                <th class="text-left" wire:click="doSort('created_at')">
+                {{-- <th class="text-left" wire:click="doSort('created_at')">
                     <span class="flex items-center justify-between">
                         <x-datatable-header displayName="{{ __('Created At') }}" field="created_at" :sortField="$sortField"
                             :sortDirection="$sortDirection" />
                     </span>
+                </th> --}}
+                <th class="text-left">
+                    {{ __('Created By') }}
                 </th>
-
+                <th class="text-left">
+                    {{ __('Updated By') }}
+                </th>
                 <th>{{ __('Actions') }}</th>
             </tr>
         </thead>
@@ -141,7 +146,9 @@ new #[Layout('layouts::admin.app'), Title('Authentication | User List')] class e
                             {{ $user->department?->name ?? '' }}
                         </td>
                         <td>{{ $user->email }}</td>
-                        <td>{{ Carbon::parse($user->created_at)->diffForHumans() }}</td>
+                        <td>{{ $user->created_by->display_name ?? '' }}</td>
+                        <td>{{ $user->updated_by->display_name ?? '' }}</td>
+                        {{-- <td>{{ Carbon::parse($user->created_at)->diffForHumans() }}</td> --}}
                         <td class="flex items-center gap-3">
                             <a href="{{ route('admin.user.edit', $user->id) }}" class="cursor-default" wire:navigate>
                                 <x-ri-edit-2-line class="w-6 h-6 text-accent-content" />

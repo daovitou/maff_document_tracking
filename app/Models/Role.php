@@ -30,4 +30,16 @@ class Role extends Model
                 $q->whereAny(['roles.name', 'roles.description'], 'like', "%{$value}%");
             });
     }
+    public function createdBy()
+    {
+        return $this->belongsTo(Admin::class, "created_by", "id");
+    }
+    public function updatedBy()
+    {
+        return $this->belongsTo(Admin::class, "updated_by", "id");
+    }
+    public function deletedBy()
+    {
+        return $this->belongsTo(Admin::class, "deleted_by", "id");
+    }
 }

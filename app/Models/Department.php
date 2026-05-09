@@ -16,7 +16,7 @@ class Department extends Model
     }
     public function scopeInGd($query)
     {
-       
+
         return $query;
     }
     public function scopeSearch($query, $value)
@@ -28,5 +28,17 @@ class Department extends Model
             ->where(function ($q) use ($value) {
                 $q->where('departments.is_active', 1)->whereAny(['gds.name', 'departments.name', 'departments.description', 'departments.phone'], 'like', "%{$value}%");
             });
+    }
+    public function createdBy()
+    {
+        return $this->belongsTo(Admin::class, "created_by", "id");
+    }
+    public function updatedBy()
+    {
+        return $this->belongsTo(Admin::class, "updated_by", "id");
+    }
+    public function deletedBy()
+    {
+        return $this->belongsTo(Admin::class, "deleted_by", "id");
     }
 }

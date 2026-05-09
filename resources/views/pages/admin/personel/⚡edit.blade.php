@@ -34,6 +34,7 @@ new #[Layout('layouts::admin.app'), Title('Personel | Edit Personel')] class ext
     public function save()
     {
         $this->validate();
+        $this->personel->updated_by = Auth::guard('admin')->user()->id;
         $this->personel->save();
          session()->flash('notify', [
             'message' => __('Personel updated successfully'),

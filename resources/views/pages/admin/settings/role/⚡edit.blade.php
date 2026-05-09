@@ -48,6 +48,7 @@ new #[Layout('layouts::admin.app'), Title('Settings | Edit Role')] class extends
     {
         $this->validate();
         $this->role->permissions = $this->selectedPermissions;
+        $this->role->updated_by = Auth::guard('admin')->user()->id;
         $this->role->save();
         session()->flash('notify', [
             'message' => __('Role updated successfully'),

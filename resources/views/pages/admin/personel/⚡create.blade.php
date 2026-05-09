@@ -35,6 +35,7 @@ new #[Layout('layouts::admin.app'), Title('Personel | New Personel')] class exte
     public function save()
     {
         $this->validate();
+        $this->personel->created_by = Auth::guard('admin')->user()->id;
         $this->personel->save();
         session()->flash('notify', [
             'message' => __('Personel created successfully'),

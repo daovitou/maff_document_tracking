@@ -59,8 +59,9 @@ new #[Layout('layouts::admin.app'), Title('Authentication | Edit User')] class e
     public function save()
     {
         $this->validate();
+        $this->user->updated_by = Auth::guard('admin')->user()->id;
         $this->user->save();
-         session()->flash('notify', [
+        session()->flash('notify', [
             'message' => __('User updated successfully'),
             'type' => 'success',
         ]);
@@ -106,7 +107,8 @@ new #[Layout('layouts::admin.app'), Title('Authentication | Edit User')] class e
                 <flux:select wire:model="user.role_id">
                     <flux:select.option value="" class="text-zinc-300">Please select a role</flux:select.option>
                     @foreach ($roles as $role)
-                        <flux:select.option value="{{ $role->id }}" wire:key="{{$role->id}}">{{ $role->name }}</flux:select.option>
+                        <flux:select.option value="{{ $role->id }}" wire:key="{{ $role->id }}">
+                            {{ $role->name }}</flux:select.option>
                     @endforeach
                 </flux:select>
                 <flux:error name="user.role_id" />
@@ -126,7 +128,7 @@ new #[Layout('layouts::admin.app'), Title('Authentication | Edit User')] class e
         class="fixed inset-0 bg-zinc-100/20 bg-opacity-50 backdrop-blur-sm z-50 items-center justify-center">
         <div class="bg-white p-6 rounded-lg shadow-xl flex flex-col items-center">
             <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-lime-600"></div>
-            <p class="mt-4 text-zinc-700 font-semibold animate-pulse">{{__("Processing your request")}}...</p>
+            <p class="mt-4 text-zinc-700 font-semibold animate-pulse">{{ __('Processing your request') }}...</p>
         </div>
     </div>
 </div>

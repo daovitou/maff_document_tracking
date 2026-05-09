@@ -60,6 +60,7 @@ new #[Layout('layouts::admin.app'), Title('Authentication | Edit User')] class e
     public function save()
     {
         $this->validate();
+        $this->user->updated_by = Auth::guard('admin')->user()->id;
         $this->user->save();
         return $this->redirectIntended(route('admin.user.index'), true);
     }

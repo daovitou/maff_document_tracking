@@ -10,7 +10,8 @@ class Gd extends Model
 {
     /** @use HasFactory<\Database\Factories\GdFactory> */
     use HasFactory, HasUuids;
-    public function departments() {
+    public function departments()
+    {
         return $this->hasMany(Department::class, "id", "gd_id");
     }
     public function scopeSearch($query, $value)
@@ -21,5 +22,17 @@ class Gd extends Model
             ->where(function ($q) use ($value) {
                 $q->whereAny(['gds.name', 'gds.description', 'gds.phone'], 'like', "%{$value}%");
             });
+    }
+    public function createdBy()
+    {
+        return $this->belongsTo(Admin::class, "created_by", "id");
+    }
+    public function updatedBy()
+    {
+        return $this->belongsTo(Admin::class, "updated_by", "id");
+    }
+    public function deletedBy()
+    {
+        return $this->belongsTo(Admin::class, "deleted_by", "id");
     }
 }

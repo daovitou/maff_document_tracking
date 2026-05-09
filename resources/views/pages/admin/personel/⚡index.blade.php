@@ -99,6 +99,13 @@ new #[Layout('layouts::admin.app'), Title('Personel | Personel List')] class ext
                     </span>
                 </th>
                 <th class="text-left">
+                    {{ __('Created By') }}
+                </th>
+                <th class="text-left">
+                    {{ __('Updated By') }}
+                </th>
+
+                <th class="text-left">
                     {{ __('Actions') }}
                 </th>
             </tr>
@@ -119,6 +126,8 @@ new #[Layout('layouts::admin.app'), Title('Personel | Personel List')] class ext
                         <td>{{ $personel->organization }}</td>
                         <td>{{ $personel->position }}</td>
                         <td>{{ $personel->phone }}</td>
+                        <td>{{ $personel->createdBy->display_name ?? '' }}</td>
+                        <td>{{ $personel->updatedBy->display_name ?? '' }}</td>
                         <td class="flex items-center gap-3">
                             @if (Gate::forUser(auth('admin')->user())->allows('edit-general-department'))
                                 <flux:tooltip content="{{ __('Edit') }}">

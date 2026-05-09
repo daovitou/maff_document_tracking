@@ -31,6 +31,7 @@ new #[Layout('layouts::admin.app'), Title('Depatments | Department List')] class
     {
         $gd = Gd::find($id);
         $gd->is_active = !$status;
+        $gd->updated_by = Auth::guard('admin')->user()->id;
         $gd->save();
         Flux::modal('delete-' . $id)->close();
         $this->dispatch('notify', message: __('General Department deleted successfully'), type: 'success');
@@ -98,13 +99,14 @@ new #[Layout('layouts::admin.app'), Title('Depatments | Department List')] class
                             :sortDirection="$sortDirection" />
                     </span>
                 </th> --}}
-                <th class="text-left" wire:click="doSort('created_at')">
+                {{-- <th class="text-left" wire:click="doSort('created_at')">
                     <span class="flex items-center justify-between">
                         <x-datatable-header displayName="{{ __('Created At') }}" field="created_at" :sortField="$sortField"
                             :sortDirection="$sortDirection" />
                     </span>
-                </th>
-
+                </th> --}}
+                <th class="text-left">{{ __('Created By') }}</th>
+                <th class="text-left">{{ __('Updated By') }}</th>
                 <th>{{ __('Actions') }}</th>
             </tr>
         </thead>
@@ -126,7 +128,9 @@ new #[Layout('layouts::admin.app'), Title('Depatments | Department List')] class
                             <flux:badge color="{{ $gd->is_active ? 'lime' : 'red' }}" size="sm">
                                 {{ $gd->is_active ? 'Active' : 'Inactive' }}</flux:badge>
                         </td> --}}
-                        <td>{{ Carbon::parse($gd->created_at)->diffForHumans() }}</td>
+                        {{-- <td>{{ Carbon::parse($gd->created_at)->diffForHumans() }}</td> --}}
+                        <td>{{ $gd->createdBy->display_name ?? ""}}</td>
+                        <td>{{ $gd->updatedBy->display_name ?? "" }}</td>
                         <td class="flex items-center gap-3">
                             @if (Gate::forUser(auth('admin')->user())->allows('edit-general-department'))
                                 <flux:tooltip content="{{ __('Edit') }}">

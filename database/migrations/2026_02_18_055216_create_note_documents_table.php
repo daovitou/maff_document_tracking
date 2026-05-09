@@ -22,12 +22,14 @@ return new class extends Migration
             $table->boolean('disable')->default(false);
             $table->uuid("for_gd_id")->nullable()->constrained("gds", "id")->cascadeOnDelete("set null");
             $table->timestamp('deleted_at')->nullable();
-            $table->uuid('created_by')->nullable()->constrained('admins','id')->nullOnDelete();
-            $table->uuid('updated_by')->nullable()->constrained('admins','id')->nullOnDelete();
+            $table->uuid('created_by')->nullable()->constrained('admins', 'id')->nullOnDelete();
+            $table->uuid('updated_by')->nullable()->constrained('admins', 'id')->nullOnDelete();
             $table->timestamps();
         });
     }
-
+    protected $casts = [
+        'article_at' => 'date:d-m-Y',
+    ];
     /**
      * Reverse the migrations.
      */

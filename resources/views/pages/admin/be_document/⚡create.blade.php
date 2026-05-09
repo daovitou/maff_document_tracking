@@ -26,6 +26,9 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
     public $send_to_options;
     public $reciever;
     public $validateReciever;
+    public $display_article_at;
+    public $display_send_at;
+    public $display_respect_at;
     public function __construct()
     {
         if (!Gate::forUser(auth('admin')->user())->allows('create-be-document')) {
@@ -83,7 +86,11 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
             ],
             'send_at' => Carbon::now()->format('Y-m-d'),
             'respect_at' => Carbon::now()->addDays(30)->format('Y-m-d'),
+            'remark' => '',
         ];
+        $this->display_article_at = Carbon::now()->format('d-m-Y');
+        $this->display_send_at = Carbon::now()->format('d-m-Y');
+        $this->display_respect_at = Carbon::now()->addDays(30)->format('d-m-Y');
     }
     public function mount()
     {
@@ -101,6 +108,9 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
         ];
         $this->tos = [];
         $this->article_at = Carbon::now()->format('Y-m-d');
+        $this->display_article_at = Carbon::now()->format('d-m-Y');
+        $this->display_send_at = Carbon::now()->format('d-m-Y');
+        $this->display_respect_at = Carbon::now()->addDays(30)->format('d-m-Y');
         $qpersonels = Personel::where('deleted_at', null)->orderBy('name', 'asc')->get();
         $this->personels = $qpersonels->map(function ($item) {
             return [
@@ -108,6 +118,21 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
                 'label' => $item->name . ' - ( ' . $item->position . ' ) ',
             ];
         });
+    }
+    public function updatedArticleAt($value)
+    {
+        // Ensure it's stored as 2026-05-06
+        $this->display_article_at = Carbon::parse($value)->format('d-m-Y');
+    }
+    public function updatedRecieverSendAt($value)
+    {
+        // Ensure it's stored as 2026-05-06
+        $this->display_send_at = Carbon::parse($value)->format('d-m-Y');
+    }
+    public function updatedRecieverRespectAt($value)
+    {
+        // Ensure it's stored as 2026-05-06
+        $this->display_respect_at = Carbon::parse($value)->format('d-m-Y');
     }
     #[Computed]
     public function gds()
@@ -161,6 +186,7 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
         if ($this->document_file) {
             $this->document->document_file = $this->document_file->store('files', 'public');
         }
+        $this->document->created_by = Auth::guard('admin')->user()->id;
         $this->document->save();
         foreach ($this->tos as $item) {
             $rec = new BeDocumentSendTo();
@@ -176,6 +202,8 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
             }
             $rec->send_at = $item['send_at'];
             $rec->respect_at = $item['respect_at'];
+            $rec->remark = $item['remark'];
+            $rec->created_by = Auth::guard('admin')->user()->id;
             $rec->save();
         }
         session()->flash('notify', [
@@ -199,6 +227,7 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
         }
         $rec['send_at'] = $this->reciever['send_at'];
         $rec['respect_at'] = $this->reciever['respect_at'];
+        $rec['remark'] = $this->reciever['remark'];
         $this->tos = [...$this->tos, $rec];
         Flux::modal('new_reciever')->close();
         $this->clearReciever();
@@ -248,7 +277,18 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
                     {{ __('Require') }}
                 </flux:badge>
             </flux:label>
-            <flux:input type="date" max="2999-12-31" wire:model="article_at" />
+            <div class="flex flex-row gap-3 items-center justify-center">
+                <flux:input readonly wire:model.live="display_article_at" mask="99-99-9999" placeholder="DD-MM-YYYY"
+                    icon="calendar" />
+                <div class="relative">
+                    <input type="date" id="dateInput" class="w-0 h-0 absolute" wire:model.live="article_at">
+                    <button type="button" onclick="document.getElementById('dateInput').showPicker()">
+                        <flux:icon.calendar />
+                    </button>
+                </div>
+
+            </div>
+            {{-- <flux:input type="date" max="2999-12-31" wire:model="article_at" /> --}}
             <flux:error name="article_at" />
         </flux:field>
         <flux:field class="mt-4">
@@ -281,13 +321,23 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
             <x-file-upload accept=".pdf,.doc,.docx" maxSize="20" wire:model="document_file" class="w-full" />
             <flux:error name="document_file" />
         </flux:field>
+        <flux:field class="mt-4">
+            <flux:label>
+                {{ __('Remark') }}
+                <flux:badge size="xs" class="ml-1">
+                    {{ __('Optional') }}
+                </flux:badge>
+            </flux:label>
+            <flux:textarea placeholder="{{ __('Remark') }}.." wire:model="document.remark" />
+            <flux:error name="document.remark" />
+        </flux:field>
         <table class="min-w-full table mt-6">
             <thead>
                 <tr>
                     <th>Nº</th>
                     <th>{{ __('Orgianization Personel Recieve') }}</th>
-                    <th>{{ __('Send At') }}</th>
-                    <th>{{ __('Respect At') }}</th>
+                    <th>{{ __('Send At') }} ({{ __('dmY') }})</th>
+                    <th>{{ __('Respect At') }} ({{ __('dmY') }})</th>
                     <th>{{ __('Actions') }}</th>
                 </tr>
             </thead>
@@ -319,10 +369,10 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
                                 @endif
                             </td>
                             <td>
-                                {{ Carbon::parse($to['send_at'])->format('d/m/Y') }}
+                                {{ Carbon::parse($to['send_at'])->format('d-m-Y') }}
                             </td>
                             <td>
-                                {{ Carbon::parse($to['respect_at'])->format('d/m/Y') }}
+                                {{ Carbon::parse($to['respect_at'])->format('d-m-Y') }}
                             </td>
                             <td>
                                 <flux:button variant="danger" icon="x-circle" size="sm"
@@ -342,15 +392,39 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
                         <flux:modal name="new_reciever" class="w-xl text-left">
                             <flux:field class="mt-4">
                                 <flux:label>
-                                    {{ __('Send At') }}
+                                    {{ __('Send At') }} ({{ __('dmY') }})
                                 </flux:label>
-                                <flux:input type="date" max="2999-12-31" wire:model="reciever.send_at" />
+                                {{-- <flux:input type="date" max="2999-12-31" wire:model="reciever.send_at" /> --}}
+                                <div class="flex flex-row gap-3 items-center justify-center">
+                                    <flux:input readonly wire:model.live="display_send_at" mask="99-99-9999"
+                                        placeholder="DD-MM-YYYY" icon="calendar" />
+                                    <div class="relative">
+                                        <input type="date" id="sendAtDateInput" class="w-0 h-0 absolute"
+                                            wire:model.live="reciever.send_at">
+                                        <button type="button"
+                                            onclick="document.getElementById('sendAtDateInput').showPicker()">
+                                            <flux:icon.calendar />
+                                        </button>
+                                    </div>
+                                </div>
                             </flux:field>
                             <flux:field class="mt-4">
                                 <flux:label>
-                                    {{ __('Respect At') }}
+                                    {{ __('Respect At') }} ({{ __('dmY') }})
                                 </flux:label>
-                                <flux:input type="date" max="2999-12-31" wire:model="reciever.respect_at" />
+                                <div class="flex flex-row gap-3 items-center justify-center">
+                                    <flux:input readonly wire:model.live="display_respect_at" mask="99-99-9999"
+                                        placeholder="DD-MM-YYYY" icon="calendar" />
+                                    <div class="relative">
+                                        <input type="date" id="respectAtDateInput" class="w-0 h-0 absolute"
+                                            wire:model.live="reciever.respect_at">
+                                        <button type="button"
+                                            onclick="document.getElementById('respectAtDateInput').showPicker()">
+                                            <flux:icon.calendar />
+                                        </button>
+                                    </div>
+                                </div>
+                                {{-- <flux:input type="date" max="2999-12-31" wire:model="reciever.respect_at" /> --}}
                             </flux:field>
                             <flux:field class="mt-4">
                                 <flux:label>
@@ -367,7 +441,8 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
                                             {{ __('General Department') }}
                                         </flux:label>
                                         <x-searchable-select wire:model.live="reciever.gd.id" icon="building-office-2"
-                                            placeholder="{{ __('Select general department') }}..." :options="$this->gds" />
+                                            placeholder="{{ __('Select general department') }}..."
+                                            :options="$this->gds" />
                                     </flux:field>
                                     <flux:field class="mt-4"
                                         wire:key="dept-container-{{ $this->reciever['gd']['id'] }}">
@@ -387,6 +462,16 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
                                         placeholder="{{ __('Select personel') }}..." :options="$this->personels" />
                                 </flux:field>
                             @endif
+                            <flux:field class="mt-4">
+                                <flux:label>
+                                    {{ __('Remark') }}
+                                    <flux:badge size="xs" class="ml-1">
+                                        {{ __('Optional') }}
+                                    </flux:badge>
+                                </flux:label>
+                                <flux:textarea placeholder="{{ __('Remark') }}.." wire:model="reciever.remark" />
+                                <flux:error name="reciever.remark" />
+                            </flux:field>
                             <flux:button variant="primary" wire:click="addReciever" class="float-end mt-8 mb-32">
                                 {{ __('Add Reciever') }}
                             </flux:button>
@@ -398,6 +483,7 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
         @if ($this->validateReciever)
             <span class="text-danger text-sm mt-2 font-semibold">{{ $this->validateReciever }}</span>
         @endif
+
         <div class="mt-6 float-right flex gap-4 nowrap">
             <flux:button variant='filled' icon="x-circle" href="{{ route('admin.note-document.index') }}"
                 class="cursor-default" wire:navigate>

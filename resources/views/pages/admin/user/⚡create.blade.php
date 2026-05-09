@@ -85,6 +85,7 @@ new #[Layout('layouts::admin.app'), Title('Create User')] class extends Componen
             $this->user->avatar = $this->avatar->store('profiles', 'public');
         }
         $this->user->password = Hash::make($this->user->password);
+        $this->user->created_by = Auth::guard('admin')->user()->id;
         $this->user->save();
         session()->flash('notify', [
             'message' => __('User created successfully'),

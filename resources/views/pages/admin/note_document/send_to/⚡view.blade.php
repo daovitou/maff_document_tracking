@@ -57,7 +57,7 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
             </tr>
             <tr class="border-b border-zinc-200">
                 <th class="text-right">{{ __('Article At') }} :</th>
-                <td>{{ Carbon::parse($this->reciever->document->article_at)->format('d/m/Y') }} ( {{ __('dmY') }}
+                <td>{{ Carbon::parse($this->reciever->document->article_at)->format('d-m-Y') }} ( {{ __('dmY') }}
                     )</td>
             </tr>
             <tr class="border-b border-zinc-200">
@@ -106,7 +106,7 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
             @endif
             <tr class="border-b border-zinc-200">
                 <th class="text-right">{{ __('Send At') }} :</th>
-                <td>{{ Carbon::parse($this->reciever->send_at)->format('d/m/Y') }} ( {{ __('dmY') }})</td>
+                <td>{{ Carbon::parse($this->reciever->send_at)->format('d-m-Y') }} ( {{ __('dmY') }})</td>
             </tr>
             @if ($reciever->status == 'បានបោះបង់')
                 <tr class="border-b border-zinc-200">
@@ -118,7 +118,7 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
                 <tr class="border-b border-zinc-200">
                     <th class="text-right">{{ __('Canceled At') }} :</th>
                     <td>
-                        {{ Carbon::parse($this->reciever->cancel_at)->format('d/m/Y') }}
+                        {{ Carbon::parse($this->reciever->cancel_at)->format('d-m-Y') }}
                     </td>
                 </tr>
             @elseif ($reciever->status == 'បានប្រគល់ត្រឡប់')
@@ -130,7 +130,7 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
                 </tr>
                 <tr class="border-b border-zinc-200">
                     <th class="text-right">{{ __('Returned At') }} :</th>
-                    <td>{{ Carbon::parse($this->reciever->return_at)->format('d/m/Y') }} ( {{ __('dmY') }})</td>
+                    <td>{{ Carbon::parse($this->reciever->return_at)->format('d-m-Y') }} ( {{ __('dmY') }})</td>
                 </tr>
                 <tr class="border-b border-zinc-200">
                     <th class="text-right">{{ __('Document Note') }} :</th>

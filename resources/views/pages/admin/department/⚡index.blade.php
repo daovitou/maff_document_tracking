@@ -47,6 +47,7 @@ new #[Layout('layouts::admin.app'), Title('Depatments | Department List')] class
     {
         $department = Department::find($id);
         $department->is_active = !$status;
+        $department->updated_by = Auth::guard('admin')->user()->id;
         $department->save();
         Flux::modal('delete-' . $id)->close();
         $this->dispatch('notify', message: __('Department deleted successfully'), type: 'success');
@@ -74,19 +75,19 @@ new #[Layout('layouts::admin.app'), Title('Depatments | Department List')] class
         <thead class="">
             <tr>
                 <th>{{ __('Nº') }}</th>
-                <th class="text-left" wire:click="doSort('name')">
-                    <span class="flex items-center justify-between">
-                        <x-datatable-header displayName="{{ __('Department') }}" field="name" :sortField="$sortField"
-                            :sortDirection="$sortDirection" />
-                    </span>
-                </th>
+
                 <th class="text-left" wire:click="doSort('gd_name')">
                     <span class="flex items-center justify-between">
                         <x-datatable-header displayName="{{ __('General Department') }}" field="gd_name"
                             :sortField="$sortField" :sortDirection="$sortDirection" />
                     </span>
                 </th>
-
+                <th class="text-left" wire:click="doSort('name')">
+                    <span class="flex items-center justify-between">
+                        <x-datatable-header displayName="{{ __('Department') }}" field="name" :sortField="$sortField"
+                            :sortDirection="$sortDirection" />
+                    </span>
+                </th>
                 <th class="text-left" wire:click="doSort('description')">
                     <span class="flex items-center justify-between">
                         <x-datatable-header displayName="{{ __('Description') }}" field="description" :sortField="$sortField"
@@ -99,6 +100,8 @@ new #[Layout('layouts::admin.app'), Title('Depatments | Department List')] class
                             :sortDirection="$sortDirection" />
                     </span>
                 </th>
+                <th class="text-left">{{ __('Created By') }}</th>
+                <th class="text-left">{{ __('Updated By') }}</th>
                 <th>{{ __('Actions') }}</th>
             </tr>
         </thead>
@@ -113,10 +116,12 @@ new #[Layout('layouts::admin.app'), Title('Depatments | Department List')] class
                 @foreach ($this->departments as $department)
                     <tr wire:key="{{ $department->id }}">
                         <th>{{ $loop->index + 1 }}</th>
-                        <td>{{ $department->name }}</td>
                         <td>{{ $department->gd_name }}</td>
+                        <td>{{ $department->name }}</td>
                         <td>{{ $department->description }}</td>
                         <td>{{ $department->phone }}</td>
+                        <td>{{ $department->createdBy->display_name ?? '' }}</td>
+                        <td>{{ $department->updatedBy->display_name ?? '' }}</td>
                         <td class="flex items-center gap-3">
                             @if (Gate::forUser(auth('admin')->user())->allows('edit-department'))
                                 <flux:tooltip content="{{ __('Edit') }}">

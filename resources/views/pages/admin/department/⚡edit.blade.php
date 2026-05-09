@@ -55,6 +55,7 @@ new #[Layout('layouts::admin.app'), Title('Departments | Edit Department')] clas
     public function save()
     {
         $this->validate();
+        $this->department->updated_by = Auth::guard('admin')->user()->id;
         $this->department->save();
         session()->flash('notify', [
             'message' => __('Department updated successfully'),

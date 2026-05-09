@@ -95,11 +95,15 @@ class BeDocument extends Model
                 'departments.name as department_name',
                 'personels.name as personel_name',
                 'personels.position as personel_position',
+                'createdBy.display_name as created_by_name',
+                'updatedBy.display_name as updated_by_name'
             )
             ->join('be_document_send_tos', 'be_documents.id', '=', 'be_document_send_tos.be_document_id')
             ->leftJoin('gds', 'be_document_send_tos.gd_id', '=', 'gds.id')
             ->leftJoin('departments', 'be_document_send_tos.department_id', '=', 'departments.id')
             ->leftJoin('personels', 'be_document_send_tos.personel_id', '=', 'personels.id')
+            ->leftJoin('admins as createdBy', 'be_document_send_tos.created_by', '=', 'createdBy.id')
+            ->leftJoin('admins as updatedBy', 'be_document_send_tos.updated_by', '=', 'updatedBy.id')
             ->where(function ($q) use ($value) {
                 $q->whereAny(
                     [
@@ -113,11 +117,25 @@ class BeDocument extends Model
                         'gds.name',
                         'departments.name',
                         'personels.name',
-                        'personels.position'
+                        'personels.position',
+                        'createdBy.display_name',
+                        'updatedBy.display_name'
                     ],
                     'like',
                     "%{$value}%"
                 );
             });
+    }
+    public function createdBy()
+    {
+        return $this->belongsTo(Admin::class, "created_by", "id");
+    }
+    public function updatedBy()
+    {
+        return $this->belongsTo(Admin::class, "updated_by", "id");
+    }
+    public function deletedBy()
+    {
+        return $this->belongsTo(Admin::class, "deleted_by", "id");
     }
 }

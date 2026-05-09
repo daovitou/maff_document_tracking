@@ -25,7 +25,8 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
     public $return_note;
     public $return_at;
     public $return_file;
-
+    public $display_return_at;
+    public $return_remark;
     public function __construct()
     {
         if (!Gate::forUser(auth('admin')->user())->allows('view-note-document')) {
@@ -38,6 +39,7 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
         $this->return_note = '';
         $this->return_at = Carbon::now()->format('Y-m-d');
         $this->return_file = '';
+        $this->display_return_at = Carbon::now()->format('d-m-Y');
     }
     public function mount()
     {
@@ -54,6 +56,8 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
         $rec->status = 'បានប្រគល់ត្រឡប់';
         $rec->document->disable = true;
         $rec->document->save();
+        $rec->updated_by = Auth::guard('admin')->user()->id;
+        $rec->return_remark = $this->return_remark;
         $rec->save();
         Flux::modal('return-{{ $id }}')->close();
         $this->clearReturn();
@@ -75,6 +79,11 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
         }
         $this->sortDirection = 'ASC';
         $this->sortField = $field;
+    }
+    public function updatedReturnAt($value)
+    {
+        // Ensure it's stored as 2026-05-06
+        $this->display_return_at = Carbon::parse($value)->format('d-m-Y');
     }
     #[Computed]
     public function docs()
@@ -141,13 +150,15 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
                 <th class="text-left">{{ __('Article') }}</th>
                 <th class="text-left w-44">{{ __('Article At') }}</th>
                 <th class="text-left">{{ __('Source') }}</th>
+                <th class="text-left">{{ __('Created By') }}</th>
+                <th class="text-left">{{ __('Updated By') }}</th>
                 <th class="w-24"></th>
             </tr>
         </thead>
         <tbody>
             @if (count($this->docsMainGroup) < 1)
                 <tr>
-                    <td colspan="5" class="text-center font-semibold bg-zinc-100">
+                    <td colspan="7" class="text-center font-semibold bg-zinc-100">
                         {{ __('No Document Found') }}
                     </td>
                 </tr>
@@ -164,8 +175,10 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
                             {{ $first->code }}
                         </th>
                         <td>{{ $first->article }}</td>
-                        <td>{{ Carbon::parse($first->article_at)->format('d/m/Y') }}</td>
+                        <td>{{ Carbon::parse($first->article_at)->format('d-m-Y') }}</td>
                         <td>{{ $first->source }}</td>
+                        <td>{{ $first->createdBy->display_name ?? '' }}</td>
+                        <td>{{ $first->updatedBy->display_name ?? '' }}</td>
                         <td>
                             <flux:tooltip content="{{ __('Edit') }}">
                                 <a href="{{ route('admin.note-document.edit', $first->id) }}"
@@ -178,7 +191,7 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
 
                     @if (isset($expandedRows[$docId]))
                         <tr wire:key="details-{{ $docId }}">
-                            <td colspan="5" class="p-0 "> {{-- Colspan must match total columns --}}
+                            <td colspan="7" class="p-0 "> {{-- Colspan must match total columns --}}
                                 <div
                                     class="bg-zinc-100/40 dark:bg-white/5 px-2 py-4 border-l-4 border-accent border-primary">
                                     <table class="w-full text-sm">
@@ -187,6 +200,8 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
                                                 <th class="text-left">{{ __('Reciever') }}</th>
                                                 <th class="text-left w-32">{{ __('Status') }}</th>
                                                 <th class="text-left w-32">{{ __('Send At') }}</th>
+                                                <th class="text-left">{{ __('Created By') }}</th>
+                                                <th class="text-left">{{ __('Updated By') }}</th>
                                                 <th class="text-right w-44">{{ __('Actions') }}</th>
                                             </tr>
                                         </thead>
@@ -219,8 +234,10 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
                                                             </flux:badge>
                                                         @endif
                                                     </td>
-                                                    <td>{{ Carbon::parse($item->send_at)->format('d/m/Y') }}</td>
-                                                    <td class="flex items-center gap-3">
+                                                    <td>{{ Carbon::parse($item->send_at)->format('d-m-Y') }}</td>
+                                                    <td>{{ $item->created_by_name }}</td>
+                                                    <td>{{ $item->updated_by_name }}</td>
+                                                    <td class="flex items-center justify-end gap-3">
                                                         @if (Gate::forUser(auth('admin')->user())->allows('view-note-document'))
                                                             <flux:tooltip content="{{ __('View') }}">
                                                                 <a href="{{ route('admin.note-document.send-to.view', ['id' => $item->id, 'send_to_id' => $item->send_to_id]) }}"
@@ -309,8 +326,26 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
                                                                                 {{ __('Require') }}
                                                                             </flux:badge>
                                                                         </flux:label>
-                                                                        <flux:input type="date" max="2999-12-31"
-                                                                            wire:model="return_at" />
+                                                                        <div
+                                                                            class="flex flex-row gap-3 items-center justify-center">
+                                                                            <flux:input readonly
+                                                                                wire:model.live="display_return_at"
+                                                                                mask="99-99-9999"
+                                                                                placeholder="DD-MM-YYYY"
+                                                                                icon="calendar" />
+                                                                            <div class="relative">
+                                                                                <input type="date" id="dateInput"
+                                                                                    class="w-0 h-0 absolute"
+                                                                                    wire:model.live="return_at">
+                                                                                <button type="button"
+                                                                                    onclick="document.getElementById('dateInput').showPicker()">
+                                                                                    <flux:icon.calendar />
+                                                                                </button>
+                                                                            </div>
+
+                                                                        </div>
+                                                                        {{-- <flux:input type="date" max="2999-12-31"
+                                                                            wire:model="return_at" /> --}}
                                                                     </flux:field>
                                                                     <flux:field class="my-4">
                                                                         <flux:label>
@@ -329,6 +364,18 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
                                                                         <x-file-upload accept=".pdf,.doc,.docx"
                                                                             maxSize="20" wire:model="return_file"
                                                                             class="w-full" />
+                                                                    </flux:field>
+                                                                    <flux:field class="mt-4">
+                                                                        <flux:label>
+                                                                            {{ __('Remark') }}
+                                                                            <flux:badge size="xs" class="ml-1">
+                                                                                {{ __('Optional') }}
+                                                                            </flux:badge>
+                                                                        </flux:label>
+                                                                        <flux:textarea
+                                                                            placeholder="{{ __('Remark') }}.."
+                                                                            wire:model="return_remark" />
+                                                                        <flux:error name="return_remark" />
                                                                     </flux:field>
                                                                     <flux:button variant="primary"
                                                                         wire:click="return('{{ $item->send_to_id }}')"

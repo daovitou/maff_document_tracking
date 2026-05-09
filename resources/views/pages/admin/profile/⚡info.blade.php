@@ -54,6 +54,7 @@ new #[Layout('layouts::admin.app'), Title('Profile | Information')] class extend
             }
             $this->user->avatar = $this->avatar->store('profiles', 'public');
         }
+        $this->user->updated_by = Auth::guard('admin')->user()->id;
         $this->user->save();
         session()->flash('notify', [
             'message' => __('User info updated successfully'),

@@ -54,6 +54,7 @@ new #[Layout('layouts::admin.app'), Title('Authentication | User List')] class e
             $user->status = 'active';
         }
         $this->dispatch('notify', message: __('User status updated successfully'), type: 'success');
+        $user->updated_by = Auth::guard('admin')->user()->id;
         $user->save();
         // Flux::modal('delete-' . $id)->close();
         // session()->flash('message', 'Group deleted successfully.');
@@ -111,13 +112,18 @@ new #[Layout('layouts::admin.app'), Title('Authentication | User List')] class e
                             :sortDirection="$sortDirection" />
                     </span>
                 </th>
-                <th class="text-left" wire:click="doSort('created_at')">
+                {{-- <th class="text-left" wire:click="doSort('created_at')">
                     <span class="flex items-center justify-between">
                         <x-datatable-header displayName="{{ __('Created At') }}" field="created_at" :sortField="$sortField"
                             :sortDirection="$sortDirection" />
                     </span>
+                </th> --}}
+                <th class="text-left">
+                    {{ __('Created By') }}
                 </th>
-
+                <th class="text-left">
+                    {{ __('Updated By') }}
+                </th>
                 <th>{{ __('Actions') }}</th>
             </tr>
         </thead>
@@ -173,7 +179,9 @@ new #[Layout('layouts::admin.app'), Title('Authentication | User List')] class e
                             @endif
 
                         </td>
-                        <td>{{ Carbon::parse($user->created_at)->diffForHumans() }}</td>
+                        {{-- <td>{{ Carbon::parse($user->created_at)->diffForHumans() }}</td> --}}
+                        <td>{{ $user->createdBy->display_name ?? '' }}</td>
+                        <td>{{ $user->updatedBy->display_name ?? '' }}</td>
                         <td class="flex items-center justify-center gap-3">
                             @if (Gate::forUser(auth('admin')->user())->allows('edit-user'))
                                 <flux:tooltip content="{{ __('Edit') }}">

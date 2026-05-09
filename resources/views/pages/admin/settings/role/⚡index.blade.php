@@ -97,6 +97,8 @@ new #[Layout('layouts::admin.app'), Title('Settings | Role List')] class extends
                             :sortDirection="$sortDirection" />
                     </span>
                 </th> --}}
+                <th class="text-left">{{ __('Created By') }}</th>
+                <th class="text-left">{{ __('Updated By') }}</th>
                 <th>{{ __('Actions') }}</th>
             </tr>
         </thead>
@@ -113,6 +115,8 @@ new #[Layout('layouts::admin.app'), Title('Settings | Role List')] class extends
                         <th>{{ $loop->index + 1 }}</th>
                         <td>{{ $role->name }}</td>
                         <td>{{ $role->description }}</td>
+                        <td>{{ $role->createdBy->display_name ?? "" }}</td>
+                        <td>{{ $role->updatedBy->display_name ?? "" }}</td>
                         {{-- <td>
                             <flux:badge color="{{ $role->is_active ? 'lime' : 'red' }}" size="sm">
                                 {{ $role->is_active ? 'Active' : 'Inactive' }}</flux:badge>

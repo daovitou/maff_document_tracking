@@ -55,6 +55,7 @@ new #[Layout('layouts::admin.app'), Title('Departments | New Department')] class
     public function save()
     {
         $this->validate();
+        $this->department->created_by = Auth::guard('admin')->user()->id;
         $this->department->save();
         session()->flash('notify', [
             'message' => __('Department created successfully'),

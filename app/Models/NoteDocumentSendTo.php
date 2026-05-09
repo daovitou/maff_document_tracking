@@ -26,9 +26,21 @@ class NoteDocumentSendTo extends Model
     {
         return $this->belongsTo(Personel::class, "personel_id", "id");
     }
-     public function getReturnPdfNameAttribute()
+    public function getReturnPdfNameAttribute()
     {
         $parts = explode("/", $this->return_file);
         return $this->return_file ? array_pop($parts) : "default.pdf";
     }
+    public function updatedBy()
+    {
+        return $this->belongsTo(Admin::class, "created_by", "id");
+    }
+    // public function updatedBy()
+    // {
+    //     return $this->belongsTo(Admin::class, "updated_by", "id");
+    // }
+    // public function deletedBy()
+    // {
+    //     return $this->belongsTo(Admin::class, "deleted_by", "id");
+    // }
 }
