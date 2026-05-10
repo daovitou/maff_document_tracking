@@ -16,10 +16,10 @@ new #[Layout('layouts::admin.app'), Title('Dashboard')] class extends Component 
     public function __construct() {}
     public function mount()
     {
-        $this->docs = NoteDocumentSendTo::where('status', 'កំពុងរងចាំ')->get();
         $threeDaysAgo = Carbon::now()->subDays(3);
-        $this->followups = NoteDocumentSendTo::where('status', 'កំពុងរងចាំ')->where('send_at', '<', $threeDaysAgo)->get();
-        $this->beDocs= BeDocumentSendTo::where('status', 'កំពុងរងចាំ')->get();
+        $this->docs = NoteDocumentSendTo::where('status', 'កំពុងរងចាំ')->where('send_at','>',$threeDaysAgo)->get();
+        $this->followups = NoteDocumentSendTo::where('status', 'កំពុងរងចាំ')->where('send_at', '<=', $threeDaysAgo)->get();
+        $this->beDocs= BeDocumentSendTo::where('status', 'កំពុងរងចាំ')->where('respect_at', '>', Carbon::now())->get();
         $this->beFollowups= BeDocumentSendTo::where('status', 'កំពុងរងចាំ')->where('respect_at', '<=', Carbon::now())->get();
 
     }
