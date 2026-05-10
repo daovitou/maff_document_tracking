@@ -87,6 +87,7 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
             'remark' => '',
         ];
         $this->display_send_at = Carbon::now()->format('d-m-Y');
+        $this->resetErrorBag();
     }
     public function mount($id)
     {
@@ -203,6 +204,23 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
     }
     public function addReciever()
     {
+        $this->resetErrorBag();
+
+        if ($this->reciever['send_at'] < $this->article_at) {
+            $this->addError('reciever.send_at', __('Send date cannot be lower than article at'));
+            return;
+        }
+        if ($this->reciever['to_gd']) {
+            if (!$this->reciever['gd']['id']) {
+                $this->addError('reciever.gd.id', __('Send to general department is required'));
+                return;
+            }
+        } else {
+            if (!$this->reciever['personel']['id']) {
+                $this->addError('reciever.personel.id', __('Send to person is required'));
+                return;
+            }
+        }
         $id = $this->reciever['id'];
         $rec = [
             'id' => (string) Str::uuid(),
@@ -438,6 +456,8 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
 
                                 </div>
                                 {{-- <flux:input type="date" max="2999-12-31" wire:model="reciever.send_at" /> --}}
+                                <flux:error name="reciever.send_at" />
+
                             </flux:field>
                             <flux:field class="mt-4">
                                 <flux:label>
@@ -455,6 +475,7 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
                                         <x-searchable-select wire:model.live="reciever.gd.id" icon="building-office-2"
                                             placeholder="{{ __('Select general department') }}..."
                                             :options="$this->gds" />
+                                        <flux:error name="reciever.gd.id" />
                                     </flux:field>
                                     <flux:field class="mt-4"
                                         wire:key="dept-container-{{ $this->reciever['gd']['id'] }}">
@@ -472,6 +493,7 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
                                     </flux:label>
                                     <x-searchable-select wire:model.live="reciever.personel.id" icon="user"
                                         placeholder="{{ __('Select personel') }}..." :options="$this->personels" />
+                                    <flux:error name="reciever.personel.id" />
                                 </flux:field>
                             @endif
                             <flux:field class="mt-4">

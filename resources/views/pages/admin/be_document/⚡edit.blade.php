@@ -90,6 +90,7 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
         ];
         $this->display_send_at = Carbon::now()->format('d-m-Y');
         $this->display_respect_at = Carbon::now()->addDays(30)->format('d-m-Y');
+        $this->resetErrorBag();
     }
     public function mount($id)
     {
@@ -214,6 +215,27 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
     }
     public function addReciever()
     {
+        $this->resetErrorBag();
+
+        if ($this->reciever['send_at'] < $this->article_at) {
+            $this->addError('reciever.send_at', __('Send date cannot be lower than article at'));
+            return;
+        }
+        if ($this->reciever['respect_at'] < $this->reciever['send_at']) {
+            $this->addError('reciever.respect_at', __('Respect date cannot be lower than send date'));
+            return;
+        }
+        if ($this->reciever['to_gd']) {
+            if (!$this->reciever['gd']['id']) {
+                $this->addError('reciever.gd.id', __('Send to general department is required'));
+                return;
+            }
+        } else {
+            if (!$this->reciever['personel']['id']) {
+                $this->addError('reciever.personel.id', __('Send to person is required'));
+                return;
+            }
+        }
         $id = $this->reciever['id'];
         $rec = [
             'id' => (string) Str::uuid(),

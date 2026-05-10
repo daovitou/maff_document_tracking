@@ -56,7 +56,7 @@ new #[Layout('layouts::admin.app'), Title('Dashboard')] class extends Component 
         <div class="relative bg-amber-100/80 border border-amber-300 rounded-lg h-36 overflow-clip p-4">
             <x-ri-file-text-line class="absolute text-amber-600 size-44 -right-12 top-0" />
             <div>
-                <span class="block font-semibold text-lg">{{ __('Pending Documents') }}:</span>
+                <span class="block font-semibold text-lg">{{ __('Pending Documents') }} ៖</span>
                 <span class="block font-bold text-6xl text-amber-600">{{ count($this->docs) }}</span>
                 <flux:link href="{{ route('admin.note-document.index') }}" variant="subtle" class="text-sm"
                     wire:navigate>
@@ -66,7 +66,7 @@ new #[Layout('layouts::admin.app'), Title('Dashboard')] class extends Component 
         <div class="relative bg-red-100/80 border border-red-300 rounded-lg h-36 overflow-clip p-4">
             <x-ri-file-text-line class="absolute text-red-500 size-44 -right-12 top-0" />
             <div>
-                <span class="block font-semibold text-lg">{{ __('Follow Up Documents') }}:</span>
+                <span class="block font-semibold text-lg">{{ __('Follow Up Documents') }} ៖</span>
                 <span class="block font-bold text-6xl text-red-500">{{ count($this->followups) }}</span>
                 <flux:link href="{{ route('admin.note-document.followup') }}" variant="subtle" class="text-sm"
                     wire:navigate>
@@ -81,7 +81,7 @@ new #[Layout('layouts::admin.app'), Title('Dashboard')] class extends Component 
         <div class="relative bg-amber-100/80 border border-amber-300 rounded-lg h-36 overflow-clip p-4">
             <x-ri-file-text-line class="absolute text-amber-600 size-44 -right-12 top-0" />
             <div>
-                <span class="block font-semibold text-lg">{{ __('Pending Documents') }}:</span>
+                <span class="block font-semibold text-lg">{{ __('Pending Documents') }} ៖</span>
                 <span class="block font-bold text-6xl text-amber-600">{{ count($this->beDocs) }}</span>
                 <flux:link href="{{ route('admin.be-document.index') }}" variant="subtle" class="text-sm"
                     wire:navigate>
@@ -91,7 +91,7 @@ new #[Layout('layouts::admin.app'), Title('Dashboard')] class extends Component 
         <div class="relative bg-red-100/80 border border-red-300 rounded-lg h-36 overflow-clip p-4">
             <x-ri-file-text-line class="absolute text-red-500 size-44 -right-12 top-0" />
             <div>
-                <span class="block font-semibold text-lg">{{ __('Follow Up Documents') }}:</span>
+                <span class="block font-semibold text-lg">{{ __('Follow Up Documents') }} ៖</span>
                 <span class="block font-bold text-6xl text-red-500">{{ count($this->beFollowups) }}</span>
                 <flux:link href="{{ route('admin.be-document.followup') }}" variant="subtle" class="text-sm"
                     wire:navigate>

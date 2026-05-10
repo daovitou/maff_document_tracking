@@ -146,7 +146,7 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
     <table class="min-w-full table mt-6">
         <thead>
             <tr class="opacity-70">
-                <th class="text-left w-52">{{ __('Code') }}</th>
+                <th class="text-left">{{ __('Code') }}</th>
                 <th class="text-left">{{ __('Article') }}</th>
                 <th class="text-left w-44">{{ __('Article At') }}</th>
                 <th class="text-left">{{ __('Source') }}</th>
@@ -172,11 +172,11 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
                         <th class="p-2 text-left">
                             <span
                                 class="inline-block w-4 mr-1 text-zinc-500">{{ isset($expandedRows[$docId]) ? '▼' : '▶' }}</span>
-                            {{ $first->code }}
+                            {{ Str::limit($first->code, 15)  }}
                         </th>
-                        <td>{{ $first->article }}</td>
+                        <td>{{ Str::limit($first->article, 35) }}</td>
                         <td>{{ Carbon::parse($first->article_at)->format('d-m-Y') }}</td>
-                        <td>{{ $first->source }}</td>
+                        <td>{{ Str::limit($first->source, 35) }}</td>
                         <td>{{ $first->createdBy->display_name ?? '' }}</td>
                         <td>{{ $first->updatedBy->display_name ?? '' }}</td>
                         <td>
