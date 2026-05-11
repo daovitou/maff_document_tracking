@@ -20,11 +20,15 @@ new #[Layout('layouts::admin.app'), Title('Dashboard')] class extends Component 
     {
         $threeDaysAgo = Carbon::now()->subDays(3);
         $this->allNoteDocs = NoteDocumentSendTo::count();
-        $this->docs = NoteDocumentSendTo::where('status', 'កំពុងរងចាំ')->where('send_at', '>', $threeDaysAgo)->count();
-        $this->followups = NoteDocumentSendTo::where('status', 'កំពុងរងចាំ')->where('send_at', '<=', $threeDaysAgo)->count();
+        // $this->docs = NoteDocumentSendTo::where('status', 'កំពុងរងចាំ')->where('send_at', '>', $threeDaysAgo)->count();
+        $this->docs = NoteDocumentSendTo::where('status', 'កំពុងរងចាំ')->count();
+        // $this->followups = NoteDocumentSendTo::where('status', 'កំពុងរងចាំ')->where('send_at', '<=', $threeDaysAgo)->count();
+        $this->followups = NoteDocumentSendTo::where('status', 'ត្រូវតាមដាន')->count();
         $this->allBeDocs = BeDocumentSendTo::count();
-        $this->beDocs = BeDocumentSendTo::where('status', 'កំពុងរងចាំ')->where('respect_at', '>', Carbon::now())->count();
-        $this->beFollowups = BeDocumentSendTo::where('status', 'កំពុងរងចាំ')->where('respect_at', '<=', Carbon::now())->count();
+        // $this->beDocs = BeDocumentSendTo::where('status', 'កំពុងរងចាំ')->where('respect_at', '>', Carbon::now())->count();
+        $this->beDocs = BeDocumentSendTo::where('status', 'កំពុងរងចាំ')->count();
+        // $this->beFollowups = BeDocumentSendTo::where('status', 'កំពុងរងចាំ')->where('respect_at', '<=', Carbon::now())->count();
+        $this->beFollowups = BeDocumentSendTo::where('status', 'ត្រូវតាមដាន')->count();
     }
 };
 ?>

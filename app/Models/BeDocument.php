@@ -57,8 +57,8 @@ class BeDocument extends Model
             ->leftJoin('gds', 'be_document_send_tos.gd_id', '=', 'gds.id')
             ->leftJoin('departments', 'be_document_send_tos.department_id', '=', 'departments.id')
             ->leftJoin('personels', 'be_document_send_tos.personel_id', '=', 'personels.id')
-            ->where('be_document_send_tos.status', 'កំពុងរងចាំ')
-            ->where('be_document_send_tos.respect_at', '<=', Carbon::now())
+            ->where('be_document_send_tos.status', 'ត្រូវតាមដាន')
+            // ->where('be_document_send_tos.respect_at', '<=', Carbon::now())
             ->where(function ($q) use ($value) {
                 $q->whereAny(
                     [

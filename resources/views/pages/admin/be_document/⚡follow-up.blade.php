@@ -90,8 +90,8 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
     {
         $fiveDaysAgo = Carbon::now()->addDays(5);
         return BeDocument::search($this->search)
-            ->where('be_document_send_tos.status', 'កំពុងរងចាំ')
-            ->where('respect_at', '<=', Carbon::now())
+            ->where('be_document_send_tos.status', 'ត្រូវតាមដាន')
+            // ->where('respect_at', '<=', Carbon::now())
             ->whereIn('code', $this->docsMainGroup->pluck('code')->toArray())
             ->get();
     }
@@ -235,6 +235,9 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
                                                         @elseif ($item->status == 'កំពុងរងចាំ')
                                                             <flux:badge size="sm" color="amber">កំពុងរងចាំ
                                                             </flux:badge>
+                                                        @elseif ($item->status == 'ត្រូវតាមដាន')
+                                                           <flux:badge size="sm" color="red">ត្រូវតាមដាន
+                                                            </flux:badge>
                                                         @else
                                                             <flux:badge size="sm" color="red">Unknown
                                                             </flux:badge>
@@ -253,7 +256,7 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
                                                                 </a>
                                                             </flux:tooltip>
 
-                                                            @if ($item->status == 'កំពុងរងចាំ')
+                                                            @if ($item->status == 'ត្រូវតាមដាន')
                                                                 {{-- ==== Cancel Action ===== --}}
                                                                 <flux:tooltip content="{{ __('Delete') }}">
                                                                     <x-ri-delete-bin-5-line class="w-6 h-6 text-red-500"
