@@ -1,0 +1,6 @@
+<?php
+
+return [
+    'TELEGRAM_BOT_TOKEN' => env('TELEGRAM_BOT_TOKEN'),
+    'CHANEL_DS_DOCTRACKING' => env('CHANEL_DS_DOCTRACKING')
+];

@@ -15,6 +15,7 @@ use Livewire\Attributes\Computed;
 use Carbon\Carbon;
 use Livewire\WithoutUrlPagination;
 use Livewire\WithPagination;
+use Illuminate\Support\Facades\Http;
 new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Component {
     //
     use WithFileUploads, WithPagination, WithoutUrlPagination;
@@ -178,6 +179,9 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
     public function save()
     {
         $this->validate();
+        $msg = '';
+        $botToken = config('env.TELEGRAM_BOT_TOKEN');
+        $chatId = config('env.CHANEL_DS_DOCTRACKING');
         $this->validateReciever = '';
         if (count($this->tos) < 1) {
             $this->validateReciever = __('Required at Least One Reciever');
@@ -189,7 +193,15 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
         }
         $this->document->created_by = Auth::guard('admin')->user()->id;
         $this->document->save();
-        foreach ($this->tos as $item) {
+        $msg .= "<b>✅ មានឯកសារ B.E ថ្មី</b>\n";
+        $msg .= "-------------------------------------\n";
+        $msg .= '<b>' . __('Code') . '៖ </b><code>' . $this->document->code . "</code>\n";
+        $msg .= '<b>' . __('Article') . '៖ </b>' . $this->document->article . "\n";
+        $msg .= '<b>' . __('Article At') . '៖ </b>' . $this->display_article_at . "\n";
+        $msg .= '<b>' . __('Source') . '៖ </b>' . $this->document->source . "\n";
+        $msg .= "-------------------------------------\n";
+
+        foreach ($this->tos as $index => $item) {
             $rec = new BeDocumentSendTo();
             if ($item['to_gd']) {
                 $rec->be_document_id = $this->document->id;
@@ -206,10 +218,28 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
             $rec->remark = $item['remark'];
             $rec->created_by = Auth::guard('admin')->user()->id;
             $rec->save();
+            $msg .= '<b>📄' . ($index + 1) . "</b>\n";
+            if ($item['to_gd']) {
+                if ($item['dept']['id']) {
+                    $msg .= '<b>' . __('For Organization') . '៖ </b>' . $this->gds->firstWhere('value', $item['gd']['id'])['label'];
+                    $msg .= '(' . $this->allDepartments->firstWhere('value', $item['dept']['id'])['label'] . ")\n";
+                } else {
+                    $msg .= '<b>' . __('For Organization') . '៖ </b>' . $this->gds->firstWhere('value', $item['gd']['id'])['label'] . "\n";
+                }
+            } else {
+                $msg .= '<b>' . __('For Personel') . '៖ </b>' . $this->personels->firstWhere('value', $item['personel']['id'])['label'] . "\n";
+            }
+            $msg .= "-------------------------------------\n";
         }
         session()->flash('notify', [
             'message' => __('Document created successfully'),
             'type' => 'success',
+        ]);
+        Http::withoutVerifying()->post("https://api.telegram.org/bot{$botToken}/sendMessage", [
+            'chat_id' => $chatId,
+            'text' => $msg,
+            'parse_mode' => 'HTML',
+            'disable_web_page_preview' => false,
         ]);
         return $this->redirectIntended(route('admin.be-document.index'), true);
     }
@@ -488,7 +518,7 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
                                     </flux:label>
                                     <x-searchable-select wire:model.live="reciever.personel.id" icon="user"
                                         placeholder="{{ __('Select personel') }}..." :options="$this->personels" />
-                                        <flux:error name="reciever.personel.id" />
+                                    <flux:error name="reciever.personel.id" />
                                 </flux:field>
                             @endif
                             <flux:field class="mt-4">

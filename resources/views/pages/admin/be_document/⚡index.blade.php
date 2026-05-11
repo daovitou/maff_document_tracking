@@ -198,7 +198,7 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
                                     <table class="w-full text-sm">
                                         <thead>
                                             <tr class="opacity-70">
-                                                <th class="text-left">{{ __('Reciever') }}</th>
+                                                <th class="text-left min-w-max">{{ __('Reciever') }}</th>
                                                 <th class="text-left w-32">{{ __('Status') }}</th>
                                                 <th class="text-left w-32">{{ __('Send At') }}</th>
                                                 <th class="text-left w-32">{{ __('Respect At') }}</th>

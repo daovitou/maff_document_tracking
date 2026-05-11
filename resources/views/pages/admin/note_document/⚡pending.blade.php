@@ -95,15 +95,18 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
         //     ->whereIn('code', $this->docsMainGroup->pluck('code')->toArray())
         //     ->get();
         return NoteDocument::search($this->search)
-            ->where('note_document_send_tos.status', 'កំពុងរងចាំ')
-            ->where('send_at', '<=', $threeDaysAgo)
             ->whereIn('code', $this->docsMainGroup->pluck('code')->toArray())
             ->get();
+        // return NoteDocument::search($this->search)
+        //     ->where('note_document_send_tos.status', 'កំពុងរងចាំ')
+        //     ->where('send_at', '>', $threeDaysAgo)
+        //     ->whereIn('code', $this->docsMainGroup->pluck('code')->toArray())
+        //     ->get();
     }
     #[Computed]
     public function docsMainGroup()
     {
-        return NoteDocument::mainGroupFollowUp($this->search)->orderBy($this->sortField, $this->sortDirection)->paginate($this->perPage);
+        return NoteDocument::mainGroupPending($this->search)->orderBy($this->sortField, $this->sortDirection)->paginate($this->perPage);
     }
     public function delete($id)
     {
@@ -136,7 +139,7 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
 ?>
 
 <div>
-    <flux:heading size="xl" level="1">{{ __('Follow Up Note Document List') }}</flux:heading>
+    <flux:heading size="xl" level="1">{{ __('Pending Note Document List') }}</flux:heading>
     {{-- <flux:text class="mb-6 mt-2 text-xl">{{ __('Follow Up Documents') }}</flux:text> --}}
     <flux:separator variant="subtle" class="my-6" />
     <div class="flex items-center justify-between mb-4">
@@ -155,7 +158,7 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
     <table class="min-w-full table mt-6">
         <thead>
             <tr class="opacity-70">
-                <th class="text-left w-52">{{ __('Code') }}</th>
+                <th class="text-left">{{ __('Code') }}</th>
                 <th class="text-left">{{ __('Article') }}</th>
                 <th class="text-left w-44">{{ __('Article At') }}</th>
                 <th class="text-left">{{ __('Source') }}</th>

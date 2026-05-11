@@ -16,6 +16,10 @@
                          :current="request()->routeIs('admin.note-document.index')" wire:navigate>
                          {{ __('Document List') }}
                      </flux:sidebar.item>
+                     <flux:sidebar.item href="{{ route('admin.note-document.pending') }}"
+                         :current="request()->routeIs('admin.note-document.pending')" wire:navigate>
+                         {{ __('Pending Document List') }}
+                     </flux:sidebar.item>
                      <flux:sidebar.item href="{{ route('admin.note-document.followup') }}"
                          :current="request()->routeIs('admin.note-document.followup')" wire:navigate>
                          {{ __('Follow Up Document List') }}
@@ -36,6 +40,10 @@
                      <flux:sidebar.item href="{{ route('admin.be-document.index') }}"
                          :current="request()->routeIs('admin.be-document.index')" wire:navigate>
                          {{ __('Document List') }}
+                     </flux:sidebar.item>
+                     <flux:sidebar.item href="{{ route('admin.be-document.pending') }}"
+                         :current="request()->routeIs('admin.be-document.pending')" wire:navigate>
+                         {{ __('Pending Document List') }}
                      </flux:sidebar.item>
                      <flux:sidebar.item href="{{ route('admin.be-document.followup') }}"
                          :current="request()->routeIs('admin.be-document.followup')" wire:navigate>

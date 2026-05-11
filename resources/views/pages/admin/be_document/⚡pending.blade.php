@@ -1,6 +1,6 @@
 <?php
-use App\Models\NoteDocument;
-use App\Models\NoteDocumentSendTo;
+use App\Models\BeDocument;
+use App\Models\BeDocumentSendTo;
 use App\Models\Gd;
 use App\Models\Department;
 use App\Models\Personel;
@@ -29,7 +29,7 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
     public $return_remark;
     public function __construct()
     {
-        if (!Gate::forUser(auth('admin')->user())->allows('view-note-document')) {
+        if (!Gate::forUser(auth('admin')->user())->allows('view-be-document')) {
             abort(403);
         }
     }
@@ -47,7 +47,7 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
     }
     public function return($id)
     {
-        $rec = NoteDocumentSendTo::find($id);
+        $rec = BeDocumentSendTo::find($id);
         $rec->return_note = $this->return_note;
         $rec->return_at = $this->return_at;
         if ($this->return_file) {
@@ -88,35 +88,29 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
     #[Computed]
     public function docs()
     {
-        $threeDaysAgo = Carbon::now()->subDays(3);
-        // return NoteDocument::search($this->search)
-        //     ->where('status', 'កំពុងរងចាំ')
-        //     ->where('send_at', '<', $threeDaysAgo)
-        //     ->whereIn('code', $this->docsMainGroup->pluck('code')->toArray())
-        //     ->get();
-        return NoteDocument::search($this->search)
-            ->where('note_document_send_tos.status', 'កំពុងរងចាំ')
-            ->where('send_at', '<=', $threeDaysAgo)
+        $fiveDaysAgo = Carbon::now()->addDays(5);
+         return BeDocument::search($this->search)
+            ->where('be_document_send_tos.status', 'កំពុងរងចាំ')
             ->whereIn('code', $this->docsMainGroup->pluck('code')->toArray())
             ->get();
     }
     #[Computed]
     public function docsMainGroup()
     {
-        return NoteDocument::mainGroupFollowUp($this->search)->orderBy($this->sortField, $this->sortDirection)->paginate($this->perPage);
+        return BeDocument::mainGroupPending($this->search)->orderBy($this->sortField, $this->sortDirection)->paginate($this->perPage);
     }
     public function delete($id)
     {
-        $record = NoteDocumentSendTo::find($id);
-        $note_document_id = $record->note_document_id;
+        $record = BeDocumentSendTo::find($id);
+        $be_document_id = $record->be_document_id;
         $record->delete();
-        $afterDelete = NoteDocumentSendTo::where('note_document_id', $note_document_id)->count();
+        $afterDelete = BeDocumentSendTo::where('be_document_id', $be_document_id)->count();
         if ($afterDelete == 0) {
-            $note_document = NoteDocument::find($note_document_id);
-            if ($note_document->document_file) {
-                Storage::disk('public')->delete($note_document->document_file);
+            $be_document = BeDocument::find($be_document_id);
+            if ($be_document->document_file) {
+                Storage::disk('public')->delete($be_document->document_file);
             }
-            $note_document->delete();
+            $be_document->delete();
         }
         Flux::modal('delete-' . $id)->close();
         $this->dispatch('notify', message: __('Document deleted successfully'), type: 'success');
@@ -136,17 +130,18 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
 ?>
 
 <div>
-    <flux:heading size="xl" level="1">{{ __('Follow Up Note Document List') }}</flux:heading>
-    {{-- <flux:text class="mb-6 mt-2 text-xl">{{ __('Follow Up Documents') }}</flux:text> --}}
+
+    <flux:heading size="xl" level="1">{{ __('Pending Be Document List') }}</flux:heading>
+    {{-- <flux:text class="mb-6 mt-2 text-xl">{{ __('Document List') }}</flux:text> --}}
     <flux:separator variant="subtle" class="my-6" />
     <div class="flex items-center justify-between mb-4">
         <form wire:submit="search" class="flex gap-4 items-center">
             <flux:input icon="magnifying-glass" class="max-w-sm" class:input="font-mono" type="text"
                 wire:model.live.debounce.300ms="search" wire:model="search" placeholder="{{ __('Search') }}..." />
         </form>
-        @if (Gate::forUser(auth('admin')->user())->allows('create-note-document'))
+        @if (Gate::forUser(auth('admin')->user())->allows('create-be-document'))
             <flux:tooltip content="{{ __('New Document') }}">
-                <flux:button variant="primary" icon='plus-circle' href="{{ route('admin.note-document.create') }}"
+                <flux:button variant="primary" icon='plus-circle' href="{{ route('admin.be-document.create') }}"
                     class="cursor-default" wire:navigate>
                     {{ __('New Document') }}</flux:button>
             </flux:tooltip>
@@ -165,6 +160,7 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
             </tr>
         </thead>
         <tbody>
+            {{-- Grouping by the unique ID of the document is safer than grouping by Code string --}}
             @if (count($this->docsMainGroup) < 1)
                 <tr>
                     <td colspan="7" class="text-center font-semibold bg-zinc-100">
@@ -172,7 +168,6 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
                     </td>
                 </tr>
             @else
-                {{-- Grouping by the unique ID of the document is safer than grouping by Code string --}}
                 @foreach ($this->docs->groupBy('id') as $docId => $items)
                     @php $first = $items->first(); @endphp
 
@@ -190,7 +185,7 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
                         <td>{{ $first->updatedBy->display_name ?? '' }}</td>
                         <td>
                             <flux:tooltip content="{{ __('Edit') }}">
-                                <a href="{{ route('admin.note-document.edit', $first->id) }}"
+                                <a href="{{ route('admin.be-document.edit', $first->id) }}"
                                     class="cursor-pointer text-accent-content" wire:navigate>
                                     <x-ri-ball-pen-line class="w-6 h-6" />
                                 </a>
@@ -205,10 +200,11 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
                                     class="bg-zinc-100/40 dark:bg-white/5 px-2 py-4 border-l-4 border-accent border-primary">
                                     <table class="w-full text-sm">
                                         <thead>
-                                           <tr class="opacity-70">
+                                            <tr class="opacity-70">
                                                 <th class="text-left min-w-max">{{ __('Reciever') }}</th>
                                                 <th class="text-left w-32">{{ __('Status') }}</th>
                                                 <th class="text-left w-32">{{ __('Send At') }}</th>
+                                                <th class="text-left w-32">{{ __('Respect At') }}</th>
                                                 <th class="text-left w-32">{{ __('Created By') }}</th>
                                                 <th class="text-left w-32">{{ __('Updated By') }}</th>
                                                 <th class="text-right w-44">{{ __('Actions') }}</th>
@@ -244,12 +240,13 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
                                                         @endif
                                                     </td>
                                                     <td>{{ Carbon::parse($item->send_at)->format('d-m-Y') }}</td>
-                                                    <td>{{ $item->created_by_name }}</td>
-                                                    <td>{{ $item->updated_by_name }}</td>
-                                                    <td class="flex items-center gap-3">
-                                                        @if (Gate::forUser(auth('admin')->user())->allows('view-note-document'))
+                                                    <td>{{ Carbon::parse($item->respect_at)->format('d-m-Y') }}</td>
+                                                    <td class="text-right">{{ $item->created_by_name }}</td>
+                                                    <td class="text-right">{{ $item->updated_by_name }}</td>
+                                                    <td class="flex items-center justify-end gap-3">
+                                                        @if (Gate::forUser(auth('admin')->user())->allows('view-be-document'))
                                                             <flux:tooltip content="{{ __('View') }}">
-                                                                <a href="{{ route('admin.note-document.send-to.view', ['id' => $item->id, 'send_to_id' => $item->send_to_id]) }}"
+                                                                <a href="{{ route('admin.be-document.send-to.view', ['id' => $item->id, 'send_to_id' => $item->send_to_id]) }}"
                                                                     class="cursor-default" wire:navigate>
                                                                     <x-ri-eye-line class="w-6 h-6 text-amber-600" />
                                                                 </a>

@@ -80,6 +80,39 @@ class BeDocument extends Model
             })
             ->groupBy('be_documents.id'); // Replaced ->distinct()
     }
+    public function scopeMainGroupPending($query, $value)
+    {
+        return $query
+            ->select(
+                'be_documents.*',
+            )
+            ->join('be_document_send_tos', 'be_documents.id', '=', 'be_document_send_tos.be_document_id')
+            ->leftJoin('gds', 'be_document_send_tos.gd_id', '=', 'gds.id')
+            ->leftJoin('departments', 'be_document_send_tos.department_id', '=', 'departments.id')
+            ->leftJoin('personels', 'be_document_send_tos.personel_id', '=', 'personels.id')
+            ->where('be_document_send_tos.status', 'កំពុងរងចាំ')
+            ->where('be_document_send_tos.respect_at', '>', Carbon::now())
+            ->where(function ($q) use ($value) {
+                $q->whereAny(
+                    [
+                        'be_documents.code',
+                        'be_documents.article',
+                        'be_documents.article_at',
+                        'be_document_send_tos.send_at',
+                        'be_document_send_tos.respect_at',
+                        'be_document_send_tos.status',
+                        'be_documents.source',
+                        'gds.name',
+                        'departments.name',
+                        'personels.name',
+                        'personels.position'
+                    ],
+                    'like',
+                    "%{$value}%"
+                );
+            })
+            ->groupBy('be_documents.id'); // Replaced ->distinct()
+    }
     public function scopeSearch($query, $value)
     {
         return $query

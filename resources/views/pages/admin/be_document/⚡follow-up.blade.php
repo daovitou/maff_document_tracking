@@ -201,16 +201,13 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
                                     class="bg-zinc-100/40 dark:bg-white/5 px-2 py-4 border-l-4 border-accent border-primary">
                                     <table class="w-full text-sm">
                                         <thead>
-                                            <tr class="opacity-70">
-                                                <th class="text-left">{{ __('Reciever') }}</th>
+                                             <tr class="opacity-70">
+                                                <th class="text-left min-w-max">{{ __('Reciever') }}</th>
                                                 <th class="text-left w-32">{{ __('Status') }}</th>
-                                                <th class="text-left w-32">{{ __('Send At') }} ({{ __('dmY') }})
-                                                </th>
-                                                <th class="text-left w-32">{{ __('Respect At') }}
-                                                    ({{ __('dmY') }})
-                                                </th>
-                                                <th class="text-right">{{ __('Created By') }}</th>
-                                                <th class="text-right">{{ __('Updated By') }}</th>
+                                                <th class="text-left w-32">{{ __('Send At') }}</th>
+                                                <th class="text-left w-32">{{ __('Respect At') }}</th>
+                                                <th class="text-left w-32">{{ __('Created By') }}</th>
+                                                <th class="text-left w-32">{{ __('Updated By') }}</th>
                                                 <th class="text-right w-44">{{ __('Actions') }}</th>
                                             </tr>
                                         </thead>

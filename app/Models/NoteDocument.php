@@ -80,6 +80,39 @@ class NoteDocument extends Model
             })
             ->groupBy('note_documents.id'); // Replaced ->distinct()
     }
+    public function scopeMainGroupPending($query, $value)
+    {
+        $threeDaysAgo = Carbon::now()->subDays(3);
+        return $query
+            ->select(
+                'note_documents.*',
+            )
+            ->join('note_document_send_tos', 'note_documents.id', '=', 'note_document_send_tos.note_document_id')
+            ->leftJoin('gds', 'note_document_send_tos.gd_id', '=', 'gds.id')
+            ->leftJoin('departments', 'note_document_send_tos.department_id', '=', 'departments.id')
+            ->leftJoin('personels', 'note_document_send_tos.personel_id', '=', 'personels.id')
+            ->where('note_document_send_tos.status', 'កំពុងរងចាំ')
+            ->where('note_document_send_tos.send_at', '>', $threeDaysAgo)
+            ->where(function ($q) use ($value) {
+                $q->whereAny(
+                    [
+                        'note_documents.code',
+                        'note_documents.article',
+                        'note_documents.source',
+                        'note_documents.article_at',
+                        'note_document_send_tos.send_at',
+                        'note_document_send_tos.status',
+                        'gds.name',
+                        'departments.name',
+                        'personels.name',
+                        'personels.position'
+                    ],
+                    'like',
+                    "%{$value}%"
+                );
+            })
+            ->groupBy('note_documents.id'); // Replaced ->distinct()
+    }
     public function scopeSearch($query, $value)
     {
         return $query

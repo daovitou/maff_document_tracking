@@ -33,6 +33,7 @@ Route::middleware(['locale'])->prefix('admin')->name('admin.')->group(function (
         Route::prefix('note-documents')->name('note-document.')->group(function () {
             Route::livewire("", 'pages::admin.note_document.index')->name('index');
             Route::livewire("follow-up", 'pages::admin.note_document.follow-up')->name('followup');
+            Route::livewire("pending", 'pages::admin.note_document.pending')->name('pending');
             Route::livewire("create", 'pages::admin.note_document.create')->name('create');
             // Route::livewire("{id}", 'pages::admin.note_document.view')->name('view');
             Route::livewire("{id}/edit", 'pages::admin.note_document.edit')->name('edit');
@@ -45,6 +46,7 @@ Route::middleware(['locale'])->prefix('admin')->name('admin.')->group(function (
         Route::prefix('be-documents')->name('be-document.')->group(function () {
             Route::livewire("", 'pages::admin.be_document.index')->name('index');
             Route::livewire("follow-up", 'pages::admin.be_document.follow-up')->name('followup');
+            Route::livewire("pending", 'pages::admin.be_document.pending')->name('pending');
             Route::livewire("create", 'pages::admin.be_document.create')->name('create');
             // Route::livewire("{id}", 'pages::admin.be_document.view')->name('view');
             Route::livewire("{id}/edit", 'pages::admin.be_document.edit')->name('edit');
