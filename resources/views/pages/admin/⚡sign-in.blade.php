@@ -3,6 +3,7 @@
 use Livewire\Component;
 use App\Models\Admin;
 use App\Mail\SendMail2FaCode;
+use Illuminate\Support\Facades\Mail;
 new class extends Component {
     //
     public $username;
@@ -18,23 +19,18 @@ new class extends Component {
 
     public function authenticate()
     {
-        // if (Auth::guard('admin')->attempt(['username' => $this->username, 'password' => $this->password, 'status' => 'active', 'deleted_at' => null])) {
-        //     return $this->redirectIntended(route('admin.dashboard'), true);
-        // }
-        // $this->addError('auth', 'Invalid credentials.');
-
+     
         $user = Admin::where('username', $this->username)->where('status', 'active')->where('deleted_at', null)->first();
         if ($user && Hash::check($this->password, $user->password)) {
-            // $this->js('console.log(' . $user . ')');
             session()->put('auth.2fa_attempted_user_id', $user->id);
-            // $randomString = Str::random(6);
             $randomString = random_int(100000, 999999);
             $user->facode = $randomString;
             $user->save();
+            // Mail::raw("You get a email for CAFE25 Booking a Stand as below information:", function ($mail) {
+            //     $mail->to(['vitoudao@gmail.com'])->subject('CAFE25 Book a Stand');
+            // });
             Mail::to("vitoudao@gmail.com")->send(new SendMail2FaCode($user));
-            //    $this->js("console.log('2FA Code Staged for ID: " . $user->email . "')");
-            // return $this->redirectIntended(route('admin.2fa'), true);
-            return;
+            return $this->redirectIntended(route('admin.2fa'), true);
         }
         $this->error = 'Invalid credentials.';
         return;

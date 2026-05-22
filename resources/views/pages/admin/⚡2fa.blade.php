@@ -40,8 +40,6 @@ new class extends Component {
         <form wire:submit="authenticate" class="w-80">
             <flux:input icon="command-line" wire:model="facode" label="{{ __('2FA Code') }}" type="text"
                 placeholder="{{ __('2FA Code') }}" autofocus />
-
-            {{ session()->get('auth.2fa_attempted_user_id') }}
             <flux:text class="text-rose-500">{{ $error }}</flux:text>
 
             <flux:button type="submit" variant="primary" class="w-full mt-8">

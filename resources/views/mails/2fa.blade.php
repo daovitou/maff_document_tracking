@@ -1,6 +1,3 @@
-<!-- <h2>MAFF Web 2FA Code</h2>
-<p>Your 2FA code is: <strong>{{ $user->get('facode') }}</strong></p>
-<p>This code expires at: 3:20</p> -->
 
 <!DOCTYPE html>
 <html lang="en">
@@ -65,11 +62,10 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>Two-Factor Authentication Code</h1>
+            <h1>Two-Factor Authentication Code : {{$user->facode}}</h1>
         </div>
         <div class="content">
             <p>To complete your login, please use the following 2FA code:</p>
-            <div class="code-box">{{ $user->get('facode') }}</div>
             <p>This code will expire in 10 minutes. If you did not request this code, please ignore this email or
                 contact support.</p>
             <p>Thank you,<br>MAFF Web Team</p>
