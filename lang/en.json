@@ -196,5 +196,7 @@
     "Role List": "Role List",
     "Are you sure to":"Are you sure to",
     "Loading":"Loading",
-    "Processing":"Processing"
+    "Processing":"Processing",
+    "2FA Code":"2FA Code",
+    "Verify 2FA":"Verify 2FA"
 }

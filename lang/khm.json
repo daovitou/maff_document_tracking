@@ -300,5 +300,7 @@
     "Pending Note Document List": "បញ្ជីរឯកសារចំណារកំពុងរងចាំ",
     "Pending Be Document List": "បញ្ជីរឯកសារ B.E កំពុងរងចាំ",
     "For Organization": "ជូនអង្គភាព ឬស្ថាប័ន",
-    "For Personel": "ជូនបុគ្គល"
+    "For Personel": "ជូនបុគ្គល",
+    "2FA Code": "លេខកូដ 2FA",
+    "Verify 2FA": "បញ្ជាក់លេខកូដ 2FA"
 }

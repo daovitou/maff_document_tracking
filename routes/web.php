@@ -13,6 +13,7 @@ Route::middleware(['locale'])->prefix('admin')->name('admin.')->group(function (
         return redirect()->route('admin.signin');
     });
     Route::livewire("sign-in", 'pages::admin.sign-in')->name('signin');
+    Route::livewire("sign-in/2fa", 'pages::admin.2fa')->name('2fa');
     Route::get('sign-out', function () {
         Auth::guard('admin')->logout();
         return redirect()->route('admin.signin');
