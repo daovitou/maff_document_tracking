@@ -29,7 +29,7 @@ new class extends Component {
             // Mail::raw("You get a email for CAFE25 Booking a Stand as below information:", function ($mail) {
             //     $mail->to(['vitoudao@gmail.com'])->subject('CAFE25 Book a Stand');
             // });
-            Mail::to("vitoudao@gmail.com")->send(new SendMail2FaCode($user));
+            Mail::to($user->email)->send(new SendMail2FaCode($user));
             return $this->redirectIntended(route('admin.2fa'), true);
         }
         $this->error = 'Invalid credentials.';
