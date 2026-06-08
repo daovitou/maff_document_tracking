@@ -7,14 +7,14 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Carbon\Carbon;
 
-class CheckDialyExpiredDocument extends Command
+class CheckDialyExpiredBeDocument extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'app:check-dialy-expired-document';
+    protected $signature = 'app:check-dialy-expired-be-document';
 
     /**
      * The console command description.
@@ -33,45 +33,43 @@ class CheckDialyExpiredDocument extends Command
         $chatId = config('env.CHANEL_DS_DOCTRACKING');
         $noteExpiredDocuments = DB::select('
         SELECT
-            note_documents.id, 
-            note_documents.`code`, 
-            note_documents.article_at, 
-            note_documents.article, 
-            note_documents.source, 
-            note_documents.note, 
-            note_documents.for_gd_id, 
-            note_document_send_tos.is_personel, 
-            note_document_send_tos.`status`, 
-            note_document_send_tos.to_gd, 
-            note_document_send_tos.send_at, 
+            be_documents.`code`, 
+            be_documents.article_at, 
+            be_documents.article, 
+            be_documents.source, 
+            be_documents.note, 
+            be_document_send_tos.`status`, 
+            be_document_send_tos.to_gd, 
+            be_document_send_tos.respect_at, 
+            be_document_send_tos.send_at, 
+            gds.`name` AS gd, 
+            departments.`name` AS dept, 
             personels.`name`, 
-            personels.position, 
-            gds.`name` as gd, 
-            departments.`name` as dept
+            personels.position
         FROM
-            note_documents
+            be_document_send_tos
             INNER JOIN
-            note_document_send_tos
+            be_documents
             ON 
-                note_documents.id = note_document_send_tos.note_document_id
-            LEFT JOIN
-            personels
-            ON 
-                note_document_send_tos.personel_id = personels.id
+                be_document_send_tos.be_document_id = be_documents.id
             LEFT JOIN
             gds
             ON 
-                note_document_send_tos.gd_id = gds.id
+                be_document_send_tos.gd_id = gds.id
             LEFT JOIN
             departments
             ON 
-                note_document_send_tos.department_id = departments.id
+                be_document_send_tos.department_id = departments.id
+            LEFT JOIN
+            personels
+            ON 
+                be_document_send_tos.personel_id = personels.id
         WHERE
-            note_document_send_tos.`status` = "ត្រូវតាមដាន"
+            be_document_send_tos.`status` = "ត្រូវតាមដាន"
         ');
         foreach ($noteExpiredDocuments as $noteExpiredDocument) {
             $msg = "";
-            $msg .= "<b>📕 មានឯកសារចំណារត្រូវតាមដាន</b>\n";
+            $msg .= "<b>📕 មានឯកសារ B.E ត្រូវតាមដាន</b>\n";
             $msg .= "-------------------------------------\n";
             $msg .= '<b>' . __('លេខលិខិត') . '៖ </b><code>' . $noteExpiredDocument->code . "</code>\n";
             $msg .= '<b>' . __('កម្មវត្ថុ') . '៖ </b>' . $noteExpiredDocument->article . "\n";
@@ -85,10 +83,12 @@ class CheckDialyExpiredDocument extends Command
                 } else {
                     $msg .= '<b>' . __('ជូនអង្គភាព ឬស្ថាប័ន') . '៖ </b>' . $noteExpiredDocument->gd . "\n";
                 }
+                $msg .= '<b>' . __('កាលបរិច្ឆេទបញ្ជូន​') . '៖ </b>' . Carbon::parse($noteExpiredDocument->send_at)->format('d-m-Y') . "\n";
             } else {
                 $msg .= '<b>' . __('ជូន​បុគ្គល') . '៖ </b>' . $noteExpiredDocument->name . "\n";
             }
             $msg .= '<b>' . __('កាលបរិច្ឆេទបញ្ជូន​') . '៖ </b>' . Carbon::parse($noteExpiredDocument->send_at)->format('d-m-Y') . "\n";
+            $msg .= '<b>' . __('កាលបរិច្ឆេទត្រលប់​') . '៖ </b>' . Carbon::parse($noteExpiredDocument->respect_at)->format('d-m-Y') . "\n";
             $msg .= "-------------------------------------\n";
             Http::withoutVerifying()->post("https://api.telegram.org/bot{$botToken}/sendMessage", [
                 'chat_id' => $chatId,
@@ -97,6 +97,12 @@ class CheckDialyExpiredDocument extends Command
                 'disable_web_page_preview' => false,
             ]);
         }
+        Http::withoutVerifying()->post("https://api.telegram.org/bot{$botToken}/sendMessage", [
+            'chat_id' => $chatId,
+            'text' => "BE",
+            'parse_mode' => 'HTML',
+            'disable_web_page_preview' => false,
+        ]);
 
         return Command::SUCCESS;
     }
