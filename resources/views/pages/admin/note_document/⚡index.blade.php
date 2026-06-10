@@ -229,6 +229,9 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
                                                         @elseif ($item->status == 'កំពុងរងចាំ')
                                                             <flux:badge size="sm" color="amber">កំពុងរងចាំ
                                                             </flux:badge>
+                                                         @elseif ($item->status == 'ត្រូវតាមដាន')
+                                                             <flux:badge size="sm" color="red">ត្រូវតាមដាន
+                                                            </flux:badge>
                                                         @else
                                                             <flux:badge size="sm" color="red">Unknown
                                                             </flux:badge>

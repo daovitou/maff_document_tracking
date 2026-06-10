@@ -89,7 +89,7 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
     public function docs()
     {
         $fiveDaysAgo = Carbon::now()->addDays(5);
-         return BeDocument::search($this->search)
+        return BeDocument::search($this->search)
             ->where('be_document_send_tos.status', 'កំពុងរងចាំ')
             ->whereIn('code', $this->docsMainGroup->pluck('code')->toArray())
             ->get();
@@ -234,6 +234,9 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
                                                         @elseif ($item->status == 'កំពុងរងចាំ')
                                                             <flux:badge size="sm" color="amber">កំពុងរងចាំ
                                                             </flux:badge>
+                                                        @elseif ($item->status == 'ត្រូវតាមដាន')
+                                                            <flux:badge size="sm" color="red">ត្រូវតាមដាន
+                                                            </flux:badge>
                                                         @else
                                                             <flux:badge size="sm" color="red">Unknown
                                                             </flux:badge>
@@ -367,9 +370,8 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
                                                                         <flux:label>
                                                                             {{ __('Documentation File') }}
                                                                         </flux:label>
-                                                                        <x-file-upload accept=".pdf"
-                                                                            maxSize="90" wire:model="return_file"
-                                                                            class="w-full" />
+                                                                        <x-file-upload accept=".pdf" maxSize="90"
+                                                                            wire:model="return_file" class="w-full" />
                                                                     </flux:field>
                                                                     <flux:field class="mt-4">
                                                                         <flux:label>
