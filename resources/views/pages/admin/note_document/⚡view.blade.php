@@ -1,6 +1,7 @@
 <?php
 use App\Models\NoteDocument;
 use App\Models\Gd;
+use App\Models\DocFile;
 use App\Models\Department;
 use App\Models\Personel;
 use Livewire\Component;

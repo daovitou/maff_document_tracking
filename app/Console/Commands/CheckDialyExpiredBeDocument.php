@@ -96,13 +96,14 @@ class CheckDialyExpiredBeDocument extends Command
                 'parse_mode' => 'HTML',
                 'disable_web_page_preview' => false,
             ]);
+            Http::withoutVerifying()->post("https://api.telegram.org/bot{$botToken}/sendMessage", [
+                'chat_id' => $chatId,
+                'text' => $msg,
+                'parse_mode' => 'HTML',
+                'disable_web_page_preview' => false,
+            ]);
         }
-        Http::withoutVerifying()->post("https://api.telegram.org/bot{$botToken}/sendMessage", [
-            'chat_id' => $chatId,
-            'text' => "BE",
-            'parse_mode' => 'HTML',
-            'disable_web_page_preview' => false,
-        ]);
+
 
         return Command::SUCCESS;
     }

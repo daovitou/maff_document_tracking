@@ -169,4 +169,7 @@ class NoteDocument extends Model
     {
         return $this->belongsTo(Admin::class, "deleted_by", "id");
     }
+    public function docs(){
+        return $this->hasMany(DocFile::class, "id", "document_id");
+    }
 }

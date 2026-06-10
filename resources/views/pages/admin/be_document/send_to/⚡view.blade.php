@@ -2,6 +2,7 @@
 use App\Models\BeDocument;
 use App\Models\BeDocumentSendTo;
 use App\Models\Gd;
+use App\Models\DocFile;
 use App\Models\Department;
 use App\Models\Personel;
 use Livewire\Component;
@@ -19,6 +20,7 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
     //
     public $doc;
     public $reciever;
+    public $oldFiles;
     public function __construct()
     {
         if (!Gate::forUser(auth('admin')->user())->allows('view-be-document')) {
@@ -28,6 +30,7 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
     public function mount($id, $send_to_id)
     {
         $this->doc = BeDocument::find($id);
+        $this->oldFiles = DocFile::where('document_id', $id)->get();
         $this->reciever = BeDocumentSendTo::find($send_to_id);
     }
 };
@@ -65,11 +68,18 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
                 <td>{{ $this->reciever->document->note }}</td>
             </tr>
             <tr class="border-b border-zinc-200">
-                <th class="text-right">{{ __('Documentation File') }} :</th>
+                <th class="text-right flex w-full justify-end">{{ __('Documentation File') }} :</th>
                 <td>
                     {{-- <a href="{{$this->doc->pdfUrl}}" target="_blank" rel="noopener noreferrer">view pdf</a> --}}
-                    <flux:link href="{{ route('view-pdf', $this->doc->pdfName) }}" target="_blank" variant="ghost">
-                        {{ __('View PDF') }}</flux:link>
+                    {{-- <flux:link href="{{ route('view-pdf', $this->doc->pdfName) }}" target="_blank" variant="ghost">
+                        {{ __('View PDF') }}</flux:link> --}}
+                    @foreach ($this->oldFiles as $file)
+                        <div class=" w-full flex items-center mb-2">
+                            <flux:link href="{{ route('view-pdf', $file->pdfName) }}" target="_blank" variant="ghost">
+                                {{ $file->original_name }}
+                            </flux:link>
+                        </div>
+                    @endforeach
                 </td>
             </tr>
             <tr class="bg-zinc-100 border-b border-zinc-200">

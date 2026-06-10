@@ -10,3 +10,4 @@ Artisan::command('inspire', function () {
 
 Schedule::command('app:check-dialy-expired-document')->dailyAt('22:00');
 Schedule::command('app:check-dialy-expired-be-document')->dailyAt('21:50');
+        

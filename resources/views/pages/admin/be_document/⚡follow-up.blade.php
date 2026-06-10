@@ -371,8 +371,8 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
                                                                         <flux:label>
                                                                             {{ __('Documentation File') }}
                                                                         </flux:label>
-                                                                        <x-file-upload accept=".pdf,.doc,.docx"
-                                                                            maxSize="20" wire:model="return_file"
+                                                                        <x-file-upload accept=".pdf"
+                                                                            maxSize="90" wire:model="return_file"
                                                                             class="w-full" />
                                                                     </flux:field>
                                                                     <flux:field class="mt-4">

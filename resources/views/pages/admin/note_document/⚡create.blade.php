@@ -1,6 +1,7 @@
 <?php
 use App\Models\NoteDocument;
 use App\Models\NoteDocumentSendTo;
+use App\Models\DocFile;
 use App\Models\Gd;
 use App\Models\Department;
 use App\Models\Personel;
@@ -19,7 +20,7 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
     //
     use WithFileUploads, WithPagination, WithoutUrlPagination;
     public $document;
-    public $document_file;
+    // public $document_file;
     public $article_at;
     public $personels;
     public $tos;
@@ -28,7 +29,21 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
     public $validateReciever;
     public $display_article_at;
     public $display_send_at;
+    public array $files = [];
+    public array $attachments = [];
 
+    public function updatedFiles()
+    {
+        $this->attachments = [...$this->attachments, ...$this->files];
+
+        $this->reset('files');
+    }
+
+    public function removeFile($index)
+    {
+        unset($this->attachments[$index]);
+        $this->attachments = array_values($this->attachments);
+    }
     public function __construct()
     {
         if (!Gate::forUser(auth('admin')->user())->allows('create-note-document')) {
@@ -43,11 +58,16 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
             'article_at' => ['required'],
             'document.source' => ['required'],
             'document.note' => ['nullable'],
-            'document_file' => [
-                'required',
-                File::types(['pdf', 'doc', 'docx'])
+            // 'document_file' => [
+            //     'required',
+            //     File::types(['pdf', 'doc', 'docx'])
+            //         ->min('1kb')
+            //         ->max(100 * 1024),
+            // ],
+            'files.*' => [
+                File::types(['pdf'])
                     ->min('1kb')
-                    ->max(30 * 1024),
+                    ->max(100 * 1024),
             ],
         ];
 
@@ -60,9 +80,9 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
             'document.article.required' => __('Article is required'),
             'article_at.required' => __('Article At is required'),
             'document.source.required' => __('Source is required'),
-            'document_file.required' => __('File is required'),
-            'document_file.max' => __('File size allow only 20MB'),
-            'document_file.upload' => __('File cannot upload, please try again later.'),
+            // 'document_file.required' => __('File is required'),
+            // 'document_file.max' => __('File size allow only 100MB'),
+            // 'document_file.upload' => __('File cannot upload, please try again later.'),
         ];
         return $results;
     }
@@ -200,11 +220,21 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
             return;
         }
         $this->document->article_at = $this->article_at;
-        if ($this->document_file) {
-            $this->document->document_file = $this->document_file->store('files', 'public');
-        }
+        // if ($this->document_file) {
+        //     $this->document->document_file = $this->document_file->store('files', 'public');
+        // }
         $this->document->created_by = Auth::guard('admin')->user()->id;
         $this->document->save();
+        foreach ($this->attachments as $index => $file) {
+            $storedDoc = new DocFile();
+            $storedDoc->document_file = $file->store('files', 'public');
+            $storedDoc->document_type = "note document";
+            $storedDoc->original_name = $file->getClientOriginalName();
+            $storedDoc->document_id = $this->document->id;
+            $storedDoc->created_by = Auth::guard('admin')->user()->id;
+            $storedDoc->save();
+        }
+        $this->reset(['files', 'attachments']);
         $msg .= "<b>✅ មានឯកសារចំណារថ្មី</b>\n";
         $msg .= "-------------------------------------\n";
         $msg .= '<b>' . __('Code') . '៖ </b><code>' . $this->document->code . "</code>\n";
@@ -212,7 +242,7 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
         $msg .= '<b>' . __('Article At') . '៖ </b>' . $this->display_article_at . "\n";
         $msg .= '<b>' . __('Source') . '៖ </b>' . $this->document->source . "\n";
         $msg .= "-------------------------------------\n";
-        foreach ($this->tos as $index=>$item) {
+        foreach ($this->tos as $index => $item) {
             $rec = new NoteDocumentSendTo();
             if ($item['to_gd']) {
                 $rec->note_document_id = $this->document->id;
@@ -371,12 +401,81 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
         <flux:field class="mt-4">
             <flux:label>
                 {{ __('Documentation File') }}
-                <flux:badge size="xs" color="red" class="ml-1">
-                    {{ __('Require') }}
+                <flux:badge size="xs" class="ml-1">
+                    {{ __('Optional') }}
                 </flux:badge>
             </flux:label>
-            <x-file-upload accept=".pdf,.doc,.docx" maxSize="20" wire:model="document_file" class="w-full" />
-            <flux:error name="document_file" />
+            <div class="space-y-4">
+
+                <label
+                    class="flex flex-col items-center justify-center w-full p-8 border-2 border-dashed border-green-300 rounded-xl cursor-pointer bg-green-50 hover:bg-green-100 transition">
+                    <svg class="w-12 h-12 text-green-600 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                            d="M12 16V4m0 0l-4 4m4-4l4 4M5 20h14" />
+                    </svg>
+
+                    <span class="font-medium text-gray-700">
+                        ជ្រើសរើសឯកសារ PDF
+                    </span>
+
+                    <span class="text-sm text-gray-500 mt-1">
+                        ឯកសារដែលបានជ្រើសរើសត្រូវតែជា PDF និងមានទំហំអតិប្បរិមាត្រឹម 90MB
+                    </span>
+
+                    <input type="file" wire:model="files" multiple accept=".pdf" class="hidden">
+                </label>
+
+                <div wire:loading wire:target="files" class="flex items-center gap-2 text-green-600">
+                    <svg class="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="10" stroke="currentColor" fill="none" />
+                    </svg>
+                    <span>កំពុង Upload...</span>
+                </div>
+
+                @if (count($attachments))
+                    <div class="space-y-2">
+
+                        <div class="flex items-center justify-between">
+                            <h3 class="font-medium text-sm">
+                                ឯកសារដែលបានជ្រើសរើស ({{ count($attachments) }})
+                            </h3>
+                        </div>
+
+                        @foreach ($attachments as $index => $file)
+                            <div class="flex items-center justify-between p-4 bg-white border rounded-xl shadow-sm">
+
+                                <div class="flex items-center gap-3">
+
+                                    <div class="w-10 h-10 flex items-center justify-center rounded-lg bg-red-100">
+                                        📄
+                                    </div>
+
+                                    <div>
+                                        <p class="font-medium text-gray-900">
+                                            {{ $file->getClientOriginalName() }}
+                                        </p>
+
+                                        <p class="text-sm text-gray-500">
+                                            {{ number_format($file->getSize() / 1024 / 1024, 2) }} MB
+                                        </p>
+                                    </div>
+
+                                </div>
+
+                                <button type="button" wire:click="removeFile({{ $index }})"
+                                    class="text-red-500 hover:text-red-700 hover:bg-red-50 p-2 rounded-lg">
+                                    🗑️
+                                </button>
+
+                            </div>
+                        @endforeach
+
+                    </div>
+                @endif
+
+            </div>
+            {{-- <x-file-upload accept=".pdf,.doc,.docx" maxSize="100" wire:model="document_file" class="w-full" /> --}}
+            {{-- <flux:error name="document_file" /> --}}
         </flux:field>
         <flux:field class="mt-4">
             <flux:label>
