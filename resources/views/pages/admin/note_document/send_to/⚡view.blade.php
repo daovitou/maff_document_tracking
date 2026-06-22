@@ -162,6 +162,13 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
                         <flux:badge size="sm" color="amber">{{ $reciever->status }}</flux:badge>
                     </td>
                 </tr>
+            @elseif($reciever->status == 'ត្រូវតាមដាន')
+                <tr class="border-b border-zinc-200">
+                    <th class="text-right">{{ __('Status') }} :</th>
+                    <td>
+                        <flux:badge size="sm" color="red">{{ $reciever->status }}</flux:badge>
+                    </td>
+                </tr>
             @else
                 <tr class="border-b border-zinc-200">
                     <th class="text-right">{{ __('Status') }} :</th>

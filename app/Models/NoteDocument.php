@@ -92,7 +92,8 @@ class NoteDocument extends Model
             ->leftJoin('departments', 'note_document_send_tos.department_id', '=', 'departments.id')
             ->leftJoin('personels', 'note_document_send_tos.personel_id', '=', 'personels.id')
             ->where('note_document_send_tos.status', 'កំពុងរងចាំ')
-            ->where('note_document_send_tos.send_at', '>', $threeDaysAgo)
+            // ->where('note_document_send_tos.send_at', '>', $threeDaysAgo)
+            ->where('note_document_send_tos.status', 'កំពុងរងចាំ')
             ->where(function ($q) use ($value) {
                 $q->whereAny(
                     [
