@@ -12,7 +12,6 @@ use App\Policies\UserPolicy;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Gate;
-
 class AppServiceProvider extends ServiceProvider
 {
     /**

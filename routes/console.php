@@ -8,6 +8,6 @@ Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote');
 
-Schedule::command('app:check-dialy-expired-document')->dailyAt('22:00');
-Schedule::command('app:check-dialy-expired-be-document')->dailyAt('21:50');
+Schedule::command('app:check-dialy-expired-document')->dailyAt('23:00');
+Schedule::command('app:check-dialy-expired-be-document')->dailyAt('22:50');
         

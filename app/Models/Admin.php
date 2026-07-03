@@ -15,7 +15,7 @@ class Admin extends Authenticatable
 
     public function getAvatarUrlAttribute()
     {
-        return $this->avatar ? asset('storage/' . $this->avatar) : asset('images/avatar.jpg');
+        return $this->avatar ? asset('storage/' . $this->avatar) : asset('images/avatar.png');
     }
     public function role()
     {
