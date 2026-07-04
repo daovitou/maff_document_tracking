@@ -30,6 +30,24 @@ new #[Layout('layouts::admin.app'), Title('Dashboard')] class extends Component 
         // $this->beFollowups = BeDocumentSendTo::where('status', 'កំពុងរងចាំ')->where('respect_at', '<=', Carbon::now())->count();
         $this->beFollowups = BeDocumentSendTo::where('status', 'ត្រូវតាមដាន')->count();
     }
+    public function allNoteDocument(){
+        return $this->redirect('/admin/note-documents', navigate: true);
+    }
+    public function allPendingNoteDocument(){
+        return $this->redirect('/admin/note-documents/pending', navigate: true);
+    }
+    public function allFollowUpNoteDocument(){
+        return $this->redirect('/admin/note-documents/follow-up', navigate: true);
+    }
+    public function allBeDocument(){
+        return $this->redirect('/admin/be-documents', navigate: true);
+    }
+    public function allPendingBeDocument(){
+        return $this->redirect('/admin/be-documents/pending', navigate: true);
+    }
+    public function allFollowUpBeDocument(){
+        return $this->redirect('/admin/be-documents/follow-up', navigate: true);
+    }
 };
 ?>
 <div>
@@ -61,7 +79,7 @@ new #[Layout('layouts::admin.app'), Title('Dashboard')] class extends Component 
         <div class="absolute -top-4 left-4 backdrop-blur-lg px-2 py-1 text-xl text-zinc-500 font-semibold">
             <span>{{ __('Note Document') }}</span>
         </div>
-        <div class="relative bg-green-100/80 border border-green-300 rounded-lg h-36 overflow-clip p-4">
+        <div class="relative bg-green-100/80 border border-green-300 rounded-lg h-36 overflow-clip p-4 hover:cursor-pointer" wire:click="allNoteDocument">
             <x-ri-file-text-line class="absolute text-green-600 size-44 -right-12 top-0" />
             <div>
                 <span class="block font-semibold text-lg">{{ __('All Note Documents') }}៖</span>
@@ -71,7 +89,7 @@ new #[Layout('layouts::admin.app'), Title('Dashboard')] class extends Component 
                     {{ __('View Documents') }}</flux:link>
             </div>
         </div>
-        <div class="relative bg-amber-100/80 border border-amber-300 rounded-lg h-36 overflow-clip p-4">
+        <div class="relative bg-amber-100/80 border border-amber-300 rounded-lg h-36 overflow-clip p-4 hover:cursor-pointer" wire:click="allPendingNoteDocument">
             <x-ri-file-text-line class="absolute text-amber-600 size-44 -right-12 top-0" />
             <div>
                 <span class="block font-semibold text-lg">{{ __('Pending Documents') }}៖</span>
@@ -81,7 +99,7 @@ new #[Layout('layouts::admin.app'), Title('Dashboard')] class extends Component 
                     {{ __('View Documents') }}</flux:link>
             </div>
         </div>
-        <div class="relative bg-red-100/80 border border-red-300 rounded-lg h-36 overflow-clip p-4">
+        <div class="relative bg-red-100/80 border border-red-300 rounded-lg h-36 overflow-clip p-4 hover:cursor-pointer" wire:click="allFollowUpNoteDocument">
             <x-ri-file-text-line class="absolute text-red-500 size-44 -right-12 top-0" />
             <div>
                 <span class="block font-semibold text-lg">{{ __('Follow Up Documents') }}៖</span>
@@ -97,17 +115,17 @@ new #[Layout('layouts::admin.app'), Title('Dashboard')] class extends Component 
         <div class="absolute -top-4 left-4 backdrop-blur-lg px-2 py-1 text-xl text-zinc-500 font-semibold">
             <span>{{ __('BE Document') }}</span>
         </div>
-        <div class="relative bg-green-100/80 border border-green-300 rounded-lg h-36 overflow-clip p-4">
+        <div class="relative bg-green-100/80 border border-green-300 rounded-lg h-36 overflow-clip p-4 hover:cursor-pointer" wire:click="allBeDocument">
             <x-ri-file-text-line class="absolute text-green-600 size-44 -right-12 top-0" />
             <div>
                 <span class="block font-semibold text-lg">{{ __('All BE Documents') }}៖</span>
                 <span class="block font-bold text-6xl text-green-600">{{ $this->allBeDocs }}</span>
-                <flux:link href="{{ route('admin.note-document.index') }}" variant="subtle" class="text-sm"
+                <flux:link href="{{ route('admin.be-document.index') }}" variant="subtle" class="text-sm"
                     wire:navigate>
                     {{ __('View Documents') }}</flux:link>
             </div>
         </div>
-        <div class="relative bg-amber-100/80 border border-amber-300 rounded-lg h-36 overflow-clip p-4">
+        <div class="relative bg-amber-100/80 border border-amber-300 rounded-lg h-36 overflow-clip p-4 hover:cursor-pointer" wire:click="allPendingBeDocument">
             <x-ri-file-text-line class="absolute text-amber-600 size-44 -right-12 top-0" />
             <div>
                 <span class="block font-semibold text-lg">{{ __('Pending Documents') }}៖</span>
@@ -117,7 +135,7 @@ new #[Layout('layouts::admin.app'), Title('Dashboard')] class extends Component 
                     {{ __('View Documents') }}</flux:link>
             </div>
         </div>
-        <div class="relative bg-red-100/80 border border-red-300 rounded-lg h-36 overflow-clip p-4">
+        <div class="relative bg-red-100/80 border border-red-300 rounded-lg h-36 overflow-clip p-4 hover:cursor-pointer" wire:click="allFollowUpBeDocument">
             <x-ri-file-text-line class="absolute text-red-500 size-44 -right-12 top-0" />
             <div>
                 <span class="block font-semibold text-lg">{{ __('Follow Up Documents') }}៖</span>
