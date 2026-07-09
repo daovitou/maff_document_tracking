@@ -89,8 +89,8 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
     public function docs()
     {
         return NoteDocument::search($this->search)
-            ->orderBy('article_at', 'ASC')
             ->whereIn('code', $this->docsMainGroup->pluck('code')->toArray())
+            ->orderBy('article_at', 'DESC')
             ->get();
     }
     #[Computed]

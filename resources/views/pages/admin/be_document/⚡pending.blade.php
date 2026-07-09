@@ -92,6 +92,7 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
         return BeDocument::search($this->search)
             ->where('be_document_send_tos.status', 'កំពុងរងចាំ')
             ->whereIn('code', $this->docsMainGroup->pluck('code')->toArray())
+            ->orderBy('article_at', 'DESC')
             ->get();
     }
     #[Computed]

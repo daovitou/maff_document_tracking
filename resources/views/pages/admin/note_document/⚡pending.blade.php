@@ -96,6 +96,7 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
         //     ->get();
         return NoteDocument::search($this->search)
             ->whereIn('code', $this->docsMainGroup->pluck('code')->toArray())
+            ->orderBy('article_at', 'DESC')
             ->get();
         // return NoteDocument::search($this->search)
         //     ->where('note_document_send_tos.status', 'កំពុងរងចាំ')

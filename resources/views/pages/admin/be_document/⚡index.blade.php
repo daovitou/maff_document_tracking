@@ -90,6 +90,7 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
     {
         return BeDocument::search($this->search)
             ->whereIn('code', $this->docsMainGroup->pluck('code')->toArray())
+            ->orderBy('article_at', 'DESC')
             ->get();
     }
     #[Computed]

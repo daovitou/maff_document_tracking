@@ -98,6 +98,7 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
             ->where('note_document_send_tos.status', 'ត្រូវតាមដាន')
             // ->where('send_at', '<=', $threeDaysAgo)
             ->whereIn('code', $this->docsMainGroup->pluck('code')->toArray())
+            ->orderBy('article_at', 'DESC')
             ->get();
     }
     #[Computed]
