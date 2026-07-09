@@ -89,6 +89,7 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
     public function docs()
     {
         return NoteDocument::search($this->search)
+            // ->orderBy('article_at', 'ASC')
             ->whereIn('code', $this->docsMainGroup->pluck('code')->toArray())
             ->get();
     }
@@ -172,7 +173,7 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
                         <th class="p-2 text-left">
                             <span
                                 class="inline-block w-4 mr-1 text-zinc-500">{{ isset($expandedRows[$docId]) ? '▼' : '▶' }}</span>
-                            {{ Str::limit($first->code, 15)  }}
+                            {{ Str::limit($first->code, 15) }}
                         </th>
                         <td>{{ Str::limit($first->article, 35) }}</td>
                         <td>{{ Carbon::parse($first->article_at)->format('d-m-Y') }}</td>
@@ -229,8 +230,8 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
                                                         @elseif ($item->status == 'កំពុងរងចាំ')
                                                             <flux:badge size="sm" color="amber">កំពុងរងចាំ
                                                             </flux:badge>
-                                                         @elseif ($item->status == 'ត្រូវតាមដាន')
-                                                             <flux:badge size="sm" color="red">ត្រូវតាមដាន
+                                                        @elseif ($item->status == 'ត្រូវតាមដាន')
+                                                            <flux:badge size="sm" color="red">ត្រូវតាមដាន
                                                             </flux:badge>
                                                         @else
                                                             <flux:badge size="sm" color="red">Unknown
@@ -364,9 +365,8 @@ new #[Layout('layouts::admin.app'), Title('Create Document')] class extends Comp
                                                                         <flux:label>
                                                                             {{ __('Documentation File') }}
                                                                         </flux:label>
-                                                                        <x-file-upload accept=".pdf"
-                                                                            maxSize="90" wire:model="return_file"
-                                                                            class="w-full" />
+                                                                        <x-file-upload accept=".pdf" maxSize="90"
+                                                                            wire:model="return_file" class="w-full" />
                                                                     </flux:field>
                                                                     <flux:field class="mt-4">
                                                                         <flux:label>
