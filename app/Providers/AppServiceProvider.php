@@ -34,6 +34,10 @@ class AppServiceProvider extends ServiceProvider
         // if ($this->app->environment('production', 'staging')) {
         //     URL::forceScheme('https');
         // }
+        // Force HTTPS in production environments
+        if ($this->app->environment('production') || env('FORCE_HTTPS', false)) {
+            URL::forceScheme('https');
+        }
 
         // ======= Admin =======
         Gate::define('view-user', [UserPolicy::class, 'view']);

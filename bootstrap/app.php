@@ -20,6 +20,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'admin'=> IsAuth::class,
             'is_system'=> IsSystem::class
         ]);
+        $middleware->trustProxies(at: '*');
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
