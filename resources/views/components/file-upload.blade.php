@@ -1,4 +1,4 @@
-@props(['name', 'label' => '', 'accept' => '*', 'maxSize' => 5])
+@props(['name', 'label' => '', 'accept' => '*', 'maxSize' => 90])
 
 <div x-data="{
     isDropping: false,
